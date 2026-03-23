@@ -122,9 +122,6 @@ export default function TicketsTab() {
             <KpiCard key={kpi.label} {...kpi} className={cn("border-l-2", sourceColors[kpi.label] || "")} />
           ))}
         </KpiRow>
-        <ChartCard title="Tickets by Status" subtitle="Period distribution">
-          <StatusBar data={ticketStatusData} />
-        </ChartCard>
       </section>
 
       {/* Performance */}
