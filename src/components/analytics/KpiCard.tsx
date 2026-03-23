@@ -6,10 +6,11 @@ interface KpiCardProps {
   value: string;
   change?: string;
   trend?: "up" | "down" | "neutral";
+  detail?: string;
   className?: string;
 }
 
-export function KpiCard({ label, value, change, trend = "neutral", className }: KpiCardProps) {
+export function KpiCard({ label, value, change, trend = "neutral", detail, className }: KpiCardProps) {
   return (
     <div
       className={cn(
@@ -21,6 +22,9 @@ export function KpiCard({ label, value, change, trend = "neutral", className }: 
         {label}
       </p>
       <p className="mt-2 text-2xl font-semibold tabular-nums text-foreground">{value}</p>
+      {detail && (
+        <p className="mt-1 text-[11px] tabular-nums text-muted-foreground">{detail}</p>
+      )}
       {change && (
         <div className="mt-2 flex items-center gap-1">
           {trend === "up" && <TrendingUp className="h-3.5 w-3.5 text-kpi-positive" />}
