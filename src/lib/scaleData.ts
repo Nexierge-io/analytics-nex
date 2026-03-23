@@ -2,7 +2,6 @@ import type { DateRange } from "@/components/layout/DateRangeSelector";
 
 // Multipliers to simulate different date ranges
 const multipliers: Record<DateRange, number> = {
-  "1h": 0.04,
   today: 0.15,
   "7d": 1,
   "30d": 4.2,

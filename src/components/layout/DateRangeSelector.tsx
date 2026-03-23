@@ -3,7 +3,6 @@ import { Calendar, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const ranges = [
-  { id: "1h", label: "Last hour" },
   { id: "today", label: "Today" },
   { id: "7d", label: "Last 7 days" },
   { id: "30d", label: "Last 30 days" },

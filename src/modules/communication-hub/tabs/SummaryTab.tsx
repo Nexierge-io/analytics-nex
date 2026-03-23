@@ -1,7 +1,8 @@
 import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
-import { communicationKpis, messageVolumeData, channelDistribution, responseTimeData, activityByHour } from "@/data/mock/analytics";
+import { SectionHeader } from "@/components/analytics/SectionHeader";
+import { summaryActivityKpis, summaryLifetimeKpis, messageVolumeData, channelDistribution, responseTimeData, activityByHour } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
 import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import {
@@ -18,20 +19,27 @@ const tooltipStyle = {
 
 export function SummaryTab() {
   const range = useDateRange();
-  const kpis = scaleKpis(communicationKpis, range);
+  const activityKpis = scaleKpis(summaryActivityKpis, range);
   const volumeData = scaleTimeSeries(messageVolumeData, ["whatsapp", "widget"], range);
   const respData = scaleTimeSeries(responseTimeData, ["avg"], range);
   const actData = scaleTimeSeries(activityByHour, ["count"], range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <KpiRow className="lg:grid-cols-4 xl:grid-cols-4">
-        {kpis.slice(0, 4).map((kpi) => (
+      <KpiRow className="lg:grid-cols-3 xl:grid-cols-3">
+        {activityKpis.slice(0, 3).map((kpi) => (
           <KpiCard key={kpi.label} {...kpi} />
         ))}
       </KpiRow>
-      <KpiRow className="lg:grid-cols-4 xl:grid-cols-4">
-        {kpis.slice(4).map((kpi) => (
+      <KpiRow className="lg:grid-cols-3 xl:grid-cols-3">
+        {activityKpis.slice(3).map((kpi) => (
+          <KpiCard key={kpi.label} {...kpi} />
+        ))}
+      </KpiRow>
+
+      <SectionHeader title="Lifetime" subtitle="Metrics not affected by date filter" />
+      <KpiRow className="sm:grid-cols-2 lg:grid-cols-2">
+        {summaryLifetimeKpis.map((kpi) => (
           <KpiCard key={kpi.label} {...kpi} />
         ))}
       </KpiRow>
@@ -91,39 +99,19 @@ export function SummaryTab() {
           </div>
         </ChartCard>
 
-        <ChartCard title="AI vs Human Handling" subtitle="Resolution breakdown">
-          <div className="space-y-4 py-4">
-            {[
-              { label: "AI Fully Resolved", value: 71.3, color: "hsl(var(--chart-1))" },
-              { label: "AI Assisted → Human", value: 16.2, color: "hsl(var(--chart-2))" },
-              { label: "Human Only", value: 12.5, color: "hsl(var(--chart-3))" },
-            ].map((item) => (
-              <div key={item.label}>
-                <div className="mb-1.5 flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">{item.label}</span>
-                  <span className="font-medium tabular-nums text-foreground">{item.value}%</span>
-                </div>
-                <div className="h-2 overflow-hidden rounded-full bg-secondary">
-                  <div className="h-full rounded-full transition-all" style={{ width: `${item.value}%`, backgroundColor: item.color }} />
-                </div>
-              </div>
-            ))}
+        <ChartCard title="Activity by Hour" subtitle="Message volume across the day">
+          <div className="h-56">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={actData}>
+                <XAxis dataKey="hour" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={tooltipStyle} />
+                <Bar dataKey="count" fill="hsl(var(--chart-2))" radius={[3, 3, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </ChartCard>
       </div>
-
-      <ChartCard title="Activity by Hour" subtitle="Message volume across the day">
-        <div className="h-48">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={actData}>
-              <XAxis dataKey="hour" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-              <Tooltip contentStyle={tooltipStyle} />
-              <Bar dataKey="count" fill="hsl(var(--chart-2))" radius={[3, 3, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </ChartCard>
     </div>
   );
 }

@@ -2,9 +2,9 @@ import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
-import { contactsKpis, contactsByCategory, contactsByStage, contactsByOrigin } from "@/data/mock/analytics";
+import { contactsLifetimeKpis, contactsActivityKpis, contactsByCategory, contactsByStage, contactsByOrigin } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
-import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
+import { scaleKpis } from "@/lib/scaleData";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const tooltipStyle = {
@@ -31,28 +31,33 @@ function HorizontalBarChart({ data, color }: { data: { name: string; value: numb
 
 export function ContactsTab() {
   const range = useDateRange();
-  const kpis = scaleKpis(contactsKpis, range);
-  const catData = scaleTimeSeries(contactsByCategory, ["value"], range);
-  const stageData = scaleTimeSeries(contactsByStage, ["value"], range);
-  const originData = scaleTimeSeries(contactsByOrigin, ["value"], range);
+  const activityKpis = scaleKpis(contactsActivityKpis, range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <KpiRow className="lg:grid-cols-4">
-        {kpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+      <SectionHeader title="Activity" subtitle="Filtered by date range" />
+      <div className="max-w-xs">
+        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
+          {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+        </KpiRow>
+      </div>
+
+      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
+      <KpiRow className="lg:grid-cols-3">
+        {contactsLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
-      <SectionHeader title="Breakdowns" subtitle="Contact segmentation across dimensions" />
+      <SectionHeader title="Breakdowns" subtitle="Contact segmentation" />
 
       <div className="grid gap-4 lg:grid-cols-3">
         <ChartCard title="By Category" subtitle="Contact classification">
-          <HorizontalBarChart data={catData} color="hsl(var(--chart-1))" />
+          <HorizontalBarChart data={contactsByCategory} color="hsl(var(--chart-1))" />
         </ChartCard>
         <ChartCard title="By Stage" subtitle="Guest journey stage">
-          <HorizontalBarChart data={stageData} color="hsl(var(--chart-2))" />
+          <HorizontalBarChart data={contactsByStage} color="hsl(var(--chart-2))" />
         </ChartCard>
         <ChartCard title="By Origin" subtitle="Contact source">
-          <HorizontalBarChart data={originData} color="hsl(var(--chart-3))" />
+          <HorizontalBarChart data={contactsByOrigin} color="hsl(var(--chart-3))" />
         </ChartCard>
       </div>
     </div>
