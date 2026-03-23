@@ -153,28 +153,6 @@ export const contactsByOrigin = [
   { name: "Staff", value: 322 },
 ];
 
-// ── Templates tab ──
-export const templatesActivityKpis = [
-  { label: "Templates Sent", value: "3,847", change: "+14%", trend: "up" as const },
-];
-
-export const templatesLifetimeKpis = [
-  { label: "Templates Total", value: "24", change: "+2", trend: "up" as const },
-];
-
-export const templatesOverTime = [
-  { date: "Week 1", value: 820 }, { date: "Week 2", value: 945 },
-  { date: "Week 3", value: 1012 }, { date: "Week 4", value: 1070 },
-];
-
-export const mostUsedTemplates = [
-  { name: "Check-in Reminder", count: 847, pct: 22 },
-  { name: "Booking Confirmation", count: 724, pct: 18.8 },
-  { name: "Welcome Message", count: 612, pct: 15.9 },
-  { name: "Post-Stay Survey", count: 498, pct: 12.9 },
-  { name: "Special Offer", count: 382, pct: 9.9 },
-];
-
 // ── Other module KPIs ──
 export const mainDashboardKpis = [
   { label: "Occupancy Rate", value: "87.4%", change: "+2.1%", trend: "up" as const },
