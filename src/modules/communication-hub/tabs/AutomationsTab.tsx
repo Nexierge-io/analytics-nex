@@ -8,9 +8,7 @@ import { scaleKpis } from "@/lib/scaleData";
 // ── Mock data (activity) ──
 const automationsActivityKpis = [
   { label: "Automations Triggered", value: "2,164", change: "+22%", trend: "up" as const },
-  { label: "Unique Types Triggered", value: "8", change: "+1", trend: "up" as const },
   { label: "Most Triggered Type", value: "Welcome Flow", change: "684 triggers", trend: "up" as const },
-  { label: "Avg Triggers / Active Day", value: "312", change: "+18%", trend: "up" as const },
 ];
 
 const automationRanking = [
@@ -40,7 +38,7 @@ export function AutomationsTab() {
     <div className="space-y-6 animate-fade-in-up">
       {/* ── Activity ── */}
       <SectionHeader title="Activity" subtitle="Filtered by date range" />
-      <KpiRow className="lg:grid-cols-4">
+      <KpiRow className="lg:grid-cols-2">
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
