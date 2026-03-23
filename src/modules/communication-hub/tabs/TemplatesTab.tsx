@@ -2,9 +2,73 @@ import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
-import { templatesActivityKpis, templatesLifetimeKpis, mostUsedTemplates } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
 import { scaleKpis } from "@/lib/scaleData";
+
+// ── Mock data (activity) ──
+const templatesActivityKpis = [
+  { label: "Templates Sent", value: "3,847", change: "+14%", trend: "up" as const },
+  { label: "Unique Categories Used", value: "6", change: "+1", trend: "up" as const },
+  { label: "Most Used Category", value: "Operational", change: "1,284 sent", trend: "up" as const },
+  { label: "Most Active Stage", value: "Pre-arrival", change: "1,648 sent", trend: "up" as const },
+];
+
+const categoryRanking = [
+  { name: "Operational", sent: 1284, pct: 33.4 },
+  { name: "Transactional", sent: 924, pct: 24.0 },
+  { name: "Marketing", sent: 687, pct: 17.9 },
+  { name: "Feedback", sent: 498, pct: 12.9 },
+  { name: "Loyalty", sent: 278, pct: 7.2 },
+  { name: "Emergency", sent: 176, pct: 4.6 },
+];
+
+const stageBreakdown = [
+  { name: "Pre-arrival", sent: 1648, pct: 42.8 },
+  { name: "In-stay", sent: 1412, pct: 36.7 },
+  { name: "Post-stay", sent: 787, pct: 20.5 },
+];
+
+// ── Mock data (lifetime) ──
+const templatesLifetimeKpis = [
+  { label: "Templates Total", value: "24", change: "+2", trend: "up" as const },
+  { label: "All-Time Most Used Category", value: "Operational", change: "8,412 sent", trend: "up" as const },
+  { label: "All-Time Most Used Stage", value: "Pre-arrival", change: "11,247 sent", trend: "up" as const },
+];
+
+function RankedList({ data }: { data: { name: string; sent: number; pct: number }[] }) {
+  const max = data[0].sent;
+  return (
+    <div className="divide-y">
+      {data.map((item, i) => (
+        <div key={item.name} className="flex items-center gap-4 py-2.5">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-secondary text-[10px] font-semibold text-muted-foreground">
+            {i + 1}
+          </span>
+          <span className="min-w-0 flex-1 truncate text-xs font-medium text-foreground">
+            {item.name}
+          </span>
+          <div className="hidden w-32 sm:block">
+            <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
+              <div
+                className="h-full rounded-full transition-all"
+                style={{
+                  width: `${(item.sent / max) * 100}%`,
+                  backgroundColor: "hsl(var(--chart-1))",
+                }}
+              />
+            </div>
+          </div>
+          <span className="w-14 text-right text-xs tabular-nums text-foreground">
+            {item.sent.toLocaleString()}
+          </span>
+          <span className="w-12 text-right text-[11px] tabular-nums text-muted-foreground">
+            {item.pct}%
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export function TemplatesTab() {
   const range = useDateRange();
@@ -12,40 +76,29 @@ export function TemplatesTab() {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
+      {/* ── Activity ── */}
       <SectionHeader title="Activity" subtitle="Filtered by date range" />
-      <div className="max-w-xs">
-        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
-          {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-        </KpiRow>
-      </div>
+      <KpiRow className="lg:grid-cols-4">
+        {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+      </KpiRow>
 
-      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
-      <div className="grid gap-4 lg:grid-cols-5">
-        <div className="max-w-xs">
-          <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
-            {templatesLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-          </KpiRow>
-        </div>
+      {/* ── By Category ── */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <ChartCard title="By Category" subtitle="Template usage by category">
+          <RankedList data={categoryRanking} />
+        </ChartCard>
 
-        <ChartCard title="Most Used Templates" subtitle="Top 5 by send count" className="lg:col-span-4">
-          <div className="space-y-3 py-2">
-            {mostUsedTemplates.map((t, i) => (
-              <div key={t.name}>
-                <div className="mb-1 flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">
-                    <span className="mr-1.5 text-[10px] font-medium text-foreground/40">{i + 1}</span>
-                    {t.name}
-                  </span>
-                  <span className="font-medium tabular-nums text-foreground">{t.count.toLocaleString()}</span>
-                </div>
-                <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
-                  <div className="h-full rounded-full bg-chart-1 transition-all" style={{ width: `${(t.count / mostUsedTemplates[0].count) * 100}%` }} />
-                </div>
-              </div>
-            ))}
-          </div>
+        {/* ── By Stage ── */}
+        <ChartCard title="By Guest Stage" subtitle="Template usage by journey stage">
+          <RankedList data={stageBreakdown} />
         </ChartCard>
       </div>
+
+      {/* ── Lifetime ── */}
+      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
+      <KpiRow className="lg:grid-cols-3">
+        {templatesLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+      </KpiRow>
     </div>
   );
 }
