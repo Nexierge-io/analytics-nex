@@ -175,20 +175,6 @@ export const mostUsedTemplates = [
   { name: "Special Offer", count: 382, pct: 9.9 },
 ];
 
-// ── Automations tab ──
-export const automationsActivityKpis = [
-  { label: "Automations Triggered", value: "2,164", change: "+22%", trend: "up" as const },
-];
-
-export const automationsLifetimeKpis = [
-  { label: "Most Used", value: "Welcome Flow", change: "684 triggers", trend: "up" as const },
-];
-
-export const automationsOverTime = [
-  { date: "Week 1", value: 480 }, { date: "Week 2", value: 512 },
-  { date: "Week 3", value: 564 }, { date: "Week 4", value: 608 },
-];
-
 // ── Other module KPIs ──
 export const mainDashboardKpis = [
   { label: "Occupancy Rate", value: "87.4%", change: "+2.1%", trend: "up" as const },
