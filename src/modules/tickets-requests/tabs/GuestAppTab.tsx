@@ -3,18 +3,17 @@ import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
 import { useDateRange } from "@/lib/DateRangeContext";
-import { scaleKpis, scaleValue } from "@/lib/scaleData";
+import { scaleKpis } from "@/lib/scaleData";
 import {
   guestAppSessionKpis, guestAppSessionSourceData,
-  guestAppPaidFunnel, guestAppPaidRevenueKpi, guestAppTopOrderedItems,
-  guestAppURFunnel, guestAppURCompletionKpi, guestAppTopRequestedItems,
+  guestAppPaidFunnel, guestAppPaidKpis, guestAppTopOrderedItems,
+  guestAppURKpis, guestAppTopRequestedItems, guestAppLifetimeKpis,
 } from "@/data/mock/tickets";
 
-/* ── Donut chart for session sources ── */
+/* ── Donut ── */
 function SessionSourceDonut({ data }: { data: { name: string; value: number; color: string }[] }) {
   const total = data.reduce((s, d) => s + d.value, 0);
   let cumulative = 0;
-
   return (
     <div className="flex items-center gap-6">
       <div className="relative h-28 w-28 shrink-0">
@@ -24,16 +23,10 @@ function SessionSourceDonut({ data }: { data: { name: string; value: number; col
             const offset = cumulative;
             cumulative += pct;
             return (
-              <circle
-                key={d.name}
-                cx="18" cy="18" r="15.9155"
-                fill="none"
-                stroke={d.color}
-                strokeWidth="3.2"
+              <circle key={d.name} cx="18" cy="18" r="15.9155" fill="none"
+                stroke={d.color} strokeWidth="3.2"
                 strokeDasharray={`${pct} ${100 - pct}`}
-                strokeDashoffset={`${-offset}`}
-                strokeLinecap="round"
-              />
+                strokeDashoffset={`${-offset}`} strokeLinecap="round" />
             );
           })}
         </svg>
@@ -57,7 +50,7 @@ function SessionSourceDonut({ data }: { data: { name: string; value: number; col
 }
 
 /* ── Simple funnel ── */
-function Funnel({ steps }: { steps: { step: string; value: number; allTime: number }[] }) {
+function Funnel({ steps }: { steps: { step: string; value: number }[] }) {
   const max = steps[0].value;
   return (
     <div className="space-y-3">
@@ -71,23 +64,13 @@ function Funnel({ steps }: { steps: { step: string; value: number; allTime: numb
               <div className="flex items-center gap-2">
                 <span className="font-medium tabular-nums text-foreground">{s.value.toLocaleString()}</span>
                 <span className="text-[10px] text-muted-foreground">({pct}%)</span>
-                {dropOff && (
-                  <span className="text-[10px] text-kpi-negative">↓{dropOff}%</span>
-                )}
+                {dropOff && <span className="text-[10px] text-kpi-negative">↓{dropOff}%</span>}
               </div>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-secondary">
-              <div
-                className="h-full rounded-full transition-all"
-                style={{
-                  width: `${(s.value / max) * 100}%`,
-                  backgroundColor: "hsl(var(--chart-1))",
-                }}
-              />
+              <div className="h-full rounded-full transition-all"
+                style={{ width: `${(s.value / max) * 100}%`, backgroundColor: "hsl(var(--chart-1))" }} />
             </div>
-            <p className="mt-0.5 text-[10px] tabular-nums text-muted-foreground/60">
-              All time: {s.allTime.toLocaleString()}
-            </p>
           </div>
         );
       })}
@@ -96,7 +79,7 @@ function Funnel({ steps }: { steps: { step: string; value: number; allTime: numb
 }
 
 /* ── Ranked list ── */
-function RankedList({ items, showRevenue }: { items: { name: string; count: number; extra: string; allTimeExtra?: string }[]; showRevenue?: boolean }) {
+function RankedList({ items, barColor }: { items: { name: string; count: number; extra: string }[]; barColor?: string }) {
   const max = Math.max(...items.map((i) => i.count));
   return (
     <div className="space-y-2.5 py-1">
@@ -110,14 +93,9 @@ function RankedList({ items, showRevenue }: { items: { name: string; count: numb
             </div>
           </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
-            <div
-              className="h-full rounded-full transition-all"
-              style={{ width: `${(item.count / max) * 100}%`, backgroundColor: showRevenue ? "hsl(var(--chart-3))" : "hsl(var(--chart-2))" }}
-            />
+            <div className="h-full rounded-full transition-all"
+              style={{ width: `${(item.count / max) * 100}%`, backgroundColor: barColor || "hsl(var(--chart-1))" }} />
           </div>
-          {item.allTimeExtra && (
-            <p className="mt-0.5 text-[10px] text-muted-foreground/60">All time: {item.allTimeExtra}</p>
-          )}
         </div>
       ))}
     </div>
@@ -127,14 +105,20 @@ function RankedList({ items, showRevenue }: { items: { name: string; count: numb
 export default function GuestAppTab() {
   const range = useDateRange();
   const sessions = scaleKpis(guestAppSessionKpis, range);
-  const scaledPaidRevenue = scaleValue(guestAppPaidRevenueKpi.value, range, 42);
+  const paid = scaleKpis(guestAppPaidKpis, range);
+  const ur = scaleKpis(guestAppURKpis, range);
 
   return (
     <div className="space-y-10 animate-fade-in-up">
-      {/* ── Sessions & Access ── */}
+      {/* ── Activity ── */}
       <section className="space-y-4">
-        <SectionHeader title="Access & Sessions" subtitle="Affected by selected date range" />
-        <KpiRow className="lg:grid-cols-3 xl:grid-cols-5">
+        <SectionHeader title="Activity" subtitle="Affected by selected date range" />
+      </section>
+
+      {/* Access */}
+      <section className="space-y-4">
+        <SectionHeader title="Access & Sessions" />
+        <KpiRow className="lg:grid-cols-4">
           {sessions.map((kpi) => (
             <KpiCard key={kpi.label} {...kpi} />
           ))}
@@ -144,58 +128,53 @@ export default function GuestAppTab() {
         </ChartCard>
       </section>
 
-      {/* ── Two Columns: Paid Services + Universal Requests ── */}
+      {/* Two columns: Paid vs Universal */}
       <div className="grid gap-8 lg:grid-cols-2">
-        {/* Paid Services funnel */}
+        {/* Paid Services */}
         <section className="space-y-4">
-          <SectionHeader title="Paid Services Funnel" subtitle="Room Service · Session to order" />
-          <ChartCard title="Ordering Funnel" subtitle="Drop-off between steps">
+          <SectionHeader title="Room Service" subtitle="Paid orders" />
+          <ChartCard title="Ordering Funnel" subtitle="Session → catalog → cart → order">
             <Funnel steps={guestAppPaidFunnel} />
           </ChartCard>
-          <KpiCard
-            label="Revenue This Period"
-            value={scaledPaidRevenue}
-            change={guestAppPaidRevenueKpi.change}
-            trend={guestAppPaidRevenueKpi.trend}
-            allTime={guestAppPaidRevenueKpi.allTime}
-          />
+          <div className="grid gap-4 sm:grid-cols-2">
+            {paid.map((kpi) => (
+              <KpiCard key={kpi.label} {...kpi} />
+            ))}
+          </div>
           <ChartCard title="Top 5 Ordered Items" subtitle="By volume this period">
             <RankedList
-              showRevenue
-              items={guestAppTopOrderedItems.map((r) => ({
-                name: r.name,
-                count: r.count,
-                extra: r.revenue,
-              }))}
+              barColor="hsl(var(--chart-3))"
+              items={guestAppTopOrderedItems.map((r) => ({ name: r.name, count: r.count, extra: r.revenue }))}
             />
           </ChartCard>
         </section>
 
-        {/* Universal Requests funnel */}
-        <section className="space-y-4">
-          <SectionHeader title="Universal Requests Funnel" subtitle="Free requests · No revenue" />
-          <ChartCard title="Request Funnel" subtitle="Session to submission">
-            <Funnel steps={guestAppURFunnel} />
-          </ChartCard>
-          <KpiCard
-            label={guestAppURCompletionKpi.label}
-            value={guestAppURCompletionKpi.value}
-            change={guestAppURCompletionKpi.change}
-            trend={guestAppURCompletionKpi.trend}
-            detail={guestAppURCompletionKpi.detail}
-          />
+        {/* Universal Requests */}
+        <section className="space-y-4 rounded-2xl border border-chart-2/10 bg-chart-2/[0.02] p-4">
+          <SectionHeader title="Universal Requests — Free" subtitle="No revenue in this block" />
+          <div className="grid gap-4 sm:grid-cols-2">
+            {ur.map((kpi) => (
+              <KpiCard key={kpi.label} {...kpi} />
+            ))}
+          </div>
           <ChartCard title="Top 5 Requested Items" subtitle="By volume this period">
             <RankedList
-              items={guestAppTopRequestedItems.map((r) => ({
-                name: r.name,
-                count: r.count,
-                extra: `${r.rate} done`,
-                allTimeExtra: r.allTime.toLocaleString(),
-              }))}
+              barColor="hsl(var(--chart-2))"
+              items={guestAppTopRequestedItems.map((r) => ({ name: r.name, count: r.count, extra: "" }))}
             />
           </ChartCard>
         </section>
       </div>
+
+      {/* ── Lifetime ── */}
+      <section className="space-y-4">
+        <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
+        <KpiRow className="lg:grid-cols-4">
+          {guestAppLifetimeKpis.map((kpi) => (
+            <KpiCard key={kpi.label} {...kpi} className="bg-gradient-to-br from-card to-secondary/40" />
+          ))}
+        </KpiRow>
+      </section>
     </div>
   );
 }

@@ -6,23 +6,22 @@ import { useDateRange } from "@/lib/DateRangeContext";
 import { scaleKpis, scaleValue } from "@/lib/scaleData";
 import {
   summaryRevenueHero,
-  summaryPaidServicesKpis,
-  summaryUniversalRequestsKpis,
-  summaryOperationalKpis,
+  summaryActivityKpis,
+  summaryLifetimeKpis,
 } from "@/data/mock/tickets";
 
 export default function SummaryTab() {
   const range = useDateRange();
-  const paid = scaleKpis(summaryPaidServicesKpis, range);
-  const ur = scaleKpis(summaryUniversalRequestsKpis, range);
-  const ops = scaleKpis(summaryOperationalKpis, range);
+  const activity = scaleKpis(summaryActivityKpis, range);
   const periodRevenue = scaleValue(summaryRevenueHero.periodRevenue, range, 99);
 
   return (
     <div className="space-y-10 animate-fade-in-up">
-      {/* ── Revenue Hero ── */}
+      {/* ── Activity ── */}
       <section className="space-y-4">
-        <SectionHeader title="Revenue" subtitle="Affected by selected date range" />
+        <SectionHeader title="Activity" subtitle="Affected by selected date range" />
+
+        {/* Revenue Hero */}
         <div className="rounded-2xl border border-kpi-positive/20 bg-card p-6 shadow-[0_0_24px_-6px_hsl(var(--kpi-positive)/0.12)]">
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
             {summaryRevenueHero.breakdown} Revenue
@@ -43,37 +42,25 @@ export default function SummaryTab() {
             <span className="text-[11px] text-muted-foreground">vs previous period</span>
           </div>
         </div>
+
+        {/* 5 KPI cards */}
+        <KpiRow className="lg:grid-cols-3 xl:grid-cols-5">
+          {activity.map((kpi) => (
+            <KpiCard key={kpi.label} {...kpi} />
+          ))}
+        </KpiRow>
       </section>
 
-      {/* ── Two Columns: Paid Services + Universal Requests ── */}
-      <div className="grid gap-8 lg:grid-cols-2">
-        {/* Column A — Paid Services */}
-        <section className="space-y-4">
-          <SectionHeader title="Paid Services" subtitle="Room Service orders" />
-          <div className="grid gap-4 sm:grid-cols-2">
-            {paid.map((kpi) => (
-              <KpiCard key={kpi.label} {...kpi} />
-            ))}
-          </div>
-        </section>
-
-        {/* Column B — Universal Requests */}
-        <section className="space-y-4">
-          <SectionHeader title="Universal Requests" subtitle="Free guest requests · No revenue" />
-          <div className="grid gap-4 sm:grid-cols-2">
-            {ur.map((kpi) => (
-              <KpiCard key={kpi.label} {...kpi} />
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* ── Operational Health ── */}
+      {/* ── Lifetime ── */}
       <section className="space-y-4">
-        <SectionHeader title="Operational Health" subtitle="All ticket sources combined" />
+        <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
         <KpiRow className="lg:grid-cols-4">
-          {ops.map((kpi) => (
-            <KpiCard key={kpi.label} {...kpi} />
+          {summaryLifetimeKpis.map((kpi) => (
+            <KpiCard
+              key={kpi.label}
+              {...kpi}
+              className="bg-gradient-to-br from-card to-secondary/40"
+            />
           ))}
         </KpiRow>
       </section>
