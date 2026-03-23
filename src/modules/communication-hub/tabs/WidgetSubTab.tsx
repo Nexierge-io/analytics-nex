@@ -7,7 +7,7 @@ import { useDateRange } from "@/lib/DateRangeContext";
 import { scaleKpis, generateTimeSeries } from "@/lib/scaleData";
 import {
   AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
 
 const tooltipStyle = {
@@ -21,8 +21,6 @@ export function WidgetSubTab() {
   const range = useDateRange();
   const activityKpis = scaleKpis(widgetActivityKpis, range);
   const sessData = generateTimeSeries({ value: 420 }, range);
-  const convoData = generateTimeSeries({ value: 65 }, range);
-  const conversionData = generateTimeSeries({ rate: 17 }, range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -31,46 +29,16 @@ export function WidgetSubTab() {
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Sessions Over Time" subtitle="Widget sessions">
-          <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={sessData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={tooltipStyle} />
-                <Area type="monotone" dataKey="value" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.1} strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </ChartCard>
-
-        <ChartCard title="Conversations Over Time" subtitle="From widget">
-          <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={convoData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={tooltipStyle} />
-                <Area type="monotone" dataKey="value" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.1} strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </ChartCard>
-      </div>
-
-      <ChartCard title="Conversion Rate Trend" subtitle="Widget conversion % over time">
+      <ChartCard title="Sessions Over Time" subtitle="Widget sessions">
         <div className="h-56">
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={conversionData}>
+            <AreaChart data={sessData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} unit="%" />
-              <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `${v}%`} />
-              <Line type="monotone" dataKey="rate" stroke="hsl(var(--chart-1))" strokeWidth={2} dot={false} />
-            </LineChart>
+              <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+              <Tooltip contentStyle={tooltipStyle} />
+              <Area type="monotone" dataKey="value" stroke="hsl(var(--chart-1))" fill="hsl(var(--chart-1))" fillOpacity={0.1} strokeWidth={2} />
+            </AreaChart>
           </ResponsiveContainer>
         </div>
       </ChartCard>

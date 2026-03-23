@@ -8,29 +8,26 @@ import {
 } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
 import { scaleKpis } from "@/lib/scaleData";
-import {
-  BarChart, Bar,
-  XAxis, YAxis, Tooltip, ResponsiveContainer,
-} from "recharts";
 
-const tooltipStyle = {
-  backgroundColor: "hsl(var(--card))",
-  border: "1px solid hsl(var(--border))",
-  borderRadius: "8px",
-  fontSize: "12px",
-};
-
-function HorizontalBarChart({ data, color }: { data: { name: string; value: number }[]; color: string }) {
+/** Compact segmented bar — no recharts needed */
+function SegmentedBar({ data, color }: { data: { name: string; value: number }[]; color: string }) {
+  const max = Math.max(...data.map((d) => d.value));
   return (
-    <div className="h-48">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical">
-          <XAxis type="number" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
-          <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} width={90} />
-          <Tooltip contentStyle={tooltipStyle} />
-          <Bar dataKey="value" fill={color} radius={[0, 4, 4, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="space-y-2.5 py-1">
+      {data.map((d) => (
+        <div key={d.name}>
+          <div className="mb-1 flex items-center justify-between text-xs">
+            <span className="text-muted-foreground">{d.name}</span>
+            <span className="font-medium tabular-nums text-foreground">{d.value.toLocaleString()}</span>
+          </div>
+          <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
+            <div
+              className="h-full rounded-full transition-all"
+              style={{ width: `${(d.value / max) * 100}%`, backgroundColor: color }}
+            />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -38,32 +35,30 @@ function HorizontalBarChart({ data, color }: { data: { name: string; value: numb
 export function ContactsTab() {
   const range = useDateRange();
   const activityKpis = scaleKpis(contactsActivityKpis, range);
-  
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      {/* ── Activity (Filtered) ── */}
+      {/* ── Activity ── */}
       <SectionHeader title="Activity" subtitle="Filtered by date range" />
       <KpiRow className="lg:grid-cols-5">
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
-
-      {/* ── Database (Lifetime) ── */}
-      <SectionHeader title="Database" subtitle="Not affected by date filter" />
+      {/* ── Lifetime ── */}
+      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
       <KpiRow className="lg:grid-cols-3">
         {contactsLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <ChartCard title="By Category" subtitle="Contact classification">
-          <HorizontalBarChart data={contactsByCategory} color="hsl(var(--chart-1))" />
+          <SegmentedBar data={contactsByCategory} color="hsl(var(--chart-1))" />
         </ChartCard>
         <ChartCard title="By Stage" subtitle="Guest journey stage">
-          <HorizontalBarChart data={contactsByStage} color="hsl(var(--chart-2))" />
+          <SegmentedBar data={contactsByStage} color="hsl(var(--chart-2))" />
         </ChartCard>
-        <ChartCard title="By Origin" subtitle="Contact source distribution">
-          <HorizontalBarChart data={contactsByOrigin} color="hsl(var(--chart-3))" />
+        <ChartCard title="By Origin" subtitle="Contact source">
+          <SegmentedBar data={contactsByOrigin} color="hsl(var(--chart-3))" />
         </ChartCard>
       </div>
     </div>
