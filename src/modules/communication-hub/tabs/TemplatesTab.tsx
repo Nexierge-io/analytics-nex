@@ -8,9 +8,15 @@ import { scaleKpis } from "@/lib/scaleData";
 // ── Mock data (activity) ──
 const templatesActivityKpis = [
   { label: "Templates Sent", value: "3,847", change: "+14%", trend: "up" as const },
-  { label: "Unique Categories Used", value: "6", change: "+1", trend: "up" as const },
   { label: "Most Used Category", value: "Operational", change: "1,284 sent", trend: "up" as const },
   { label: "Most Active Stage", value: "Pre-arrival", change: "1,648 sent", trend: "up" as const },
+];
+
+const guestCategoryBreakdown = [
+  { name: "Unknown", sent: 412, pct: 10.7 },
+  { name: "Lead", sent: 876, pct: 22.8 },
+  { name: "Guest", sent: 1842, pct: 47.9 },
+  { name: "Past Guest", sent: 717, pct: 18.6 },
 ];
 
 const categoryRanking = [
@@ -78,19 +84,22 @@ export function TemplatesTab() {
     <div className="space-y-6 animate-fade-in-up">
       {/* ── Activity ── */}
       <SectionHeader title="Activity" subtitle="Filtered by date range" />
-      <KpiRow className="lg:grid-cols-4">
+      <KpiRow className="lg:grid-cols-3">
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
       {/* ── By Category ── */}
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
         <ChartCard title="By Category" subtitle="Template usage by category">
           <RankedList data={categoryRanking} />
         </ChartCard>
 
-        {/* ── By Stage ── */}
         <ChartCard title="By Guest Stage" subtitle="Template usage by journey stage">
           <RankedList data={stageBreakdown} />
+        </ChartCard>
+
+        <ChartCard title="By Guest Category" subtitle="Template usage by contact type">
+          <RankedList data={guestCategoryBreakdown} />
         </ChartCard>
       </div>
 
