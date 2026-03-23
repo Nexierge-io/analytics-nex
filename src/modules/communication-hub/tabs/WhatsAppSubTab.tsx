@@ -1,8 +1,7 @@
 import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
-import { SectionHeader } from "@/components/analytics/SectionHeader";
-import { whatsappActivityKpis, whatsappLifetimeKpis, whatsappConvoData, whatsappMessagesData, aiVsHumanPie } from "@/data/mock/analytics";
+import { whatsappActivityKpis, whatsappConvoData, whatsappMessagesData, aiVsHumanPie } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
 import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import {
@@ -25,16 +24,9 @@ export function WhatsAppSubTab() {
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <KpiRow className="lg:grid-cols-5 xl:grid-cols-5">
+      <KpiRow className="lg:grid-cols-4 xl:grid-cols-4">
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
-
-      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
-      <div className="max-w-xs">
-        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
-          {whatsappLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-        </KpiRow>
-      </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard title="Conversations Over Time" subtitle="Daily WhatsApp conversations">
