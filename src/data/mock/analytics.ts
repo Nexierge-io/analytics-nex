@@ -132,7 +132,7 @@ export const contactsActivityKpis = [
   { label: "From WhatsApp", value: "97", change: "+18%", trend: "up" as const },
   { label: "From Widget", value: "42", change: "+31%", trend: "up" as const },
   { label: "Manual", value: "14", change: "+2", trend: "up" as const },
-  { label: "By Staff", value: "10", change: "-3", trend: "down" as const },
+  
 ];
 
 export const contactCreationTrendData = [
