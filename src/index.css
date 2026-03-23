@@ -55,6 +55,57 @@
     --kpi-negative: 0 60% 52%;
     --kpi-neutral: 24 5% 46%;
   }
+
+  .dark {
+    --background: 220 10% 8%;
+    --foreground: 40 7% 92%;
+
+    --card: 220 10% 11%;
+    --card-foreground: 40 7% 92%;
+
+    --popover: 220 10% 11%;
+    --popover-foreground: 40 7% 92%;
+
+    --primary: 40 7% 92%;
+    --primary-foreground: 220 10% 8%;
+
+    --secondary: 220 8% 16%;
+    --secondary-foreground: 40 7% 85%;
+
+    --muted: 220 8% 16%;
+    --muted-foreground: 220 5% 52%;
+
+    --accent: 168 50% 38%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 55% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 8% 18%;
+    --input: 220 8% 18%;
+    --ring: 168 50% 38%;
+
+    --sidebar-background: 220 10% 9%;
+    --sidebar-foreground: 40 7% 80%;
+    --sidebar-primary: 40 7% 92%;
+    --sidebar-primary-foreground: 220 10% 8%;
+    --sidebar-accent: 220 8% 14%;
+    --sidebar-accent-foreground: 40 7% 85%;
+    --sidebar-border: 220 8% 16%;
+    --sidebar-ring: 168 50% 38%;
+
+    /* Custom analytics tokens */
+    --surface-raised: 220 10% 13%;
+    --surface-sunken: 220 10% 6%;
+    --chart-1: 168 50% 45%;
+    --chart-2: 200 55% 55%;
+    --chart-3: 24 70% 58%;
+    --chart-4: 280 40% 60%;
+    --chart-5: 340 50% 58%;
+    --kpi-positive: 152 55% 45%;
+    --kpi-negative: 0 55% 55%;
+    --kpi-neutral: 220 5% 52%;
+  }
 }
 
 @layer base {
