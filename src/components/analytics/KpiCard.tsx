@@ -7,10 +7,11 @@ interface KpiCardProps {
   change?: string;
   trend?: "up" | "down" | "neutral";
   detail?: string;
+  allTime?: string;
   className?: string;
 }
 
-export function KpiCard({ label, value, change, trend = "neutral", detail, className }: KpiCardProps) {
+export function KpiCard({ label, value, change, trend = "neutral", detail, allTime, className }: KpiCardProps) {
   return (
     <div
       className={cn(
@@ -24,6 +25,9 @@ export function KpiCard({ label, value, change, trend = "neutral", detail, class
       <p className="mt-2 text-2xl font-semibold tabular-nums text-foreground">{value}</p>
       {detail && (
         <p className="mt-1 text-[11px] tabular-nums text-muted-foreground">{detail}</p>
+      )}
+      {allTime && (
+        <p className="mt-1 text-[10px] tabular-nums text-muted-foreground/70">All time: {allTime}</p>
       )}
       {change && (
         <div className="mt-2 flex items-center gap-1">
