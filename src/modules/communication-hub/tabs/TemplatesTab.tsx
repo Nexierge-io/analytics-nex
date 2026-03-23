@@ -22,14 +22,18 @@ export function TemplatesTab() {
   return (
     <div className="space-y-6 animate-fade-in-up">
       <SectionHeader title="Activity" subtitle="Filtered by date range" />
-      <KpiRow className="sm:grid-cols-1 lg:grid-cols-1" style={{ maxWidth: 320 }}>
-        {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-      </KpiRow>
+      <div className="max-w-xs">
+        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
+          {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+        </KpiRow>
+      </div>
 
       <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
-      <KpiRow className="sm:grid-cols-1 lg:grid-cols-1" style={{ maxWidth: 320 }}>
-        {templatesLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-      </KpiRow>
+      <div className="max-w-xs">
+        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
+          {templatesLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+        </KpiRow>
+      </div>
 
       <div className="grid gap-4 lg:grid-cols-5">
         <ChartCard title="Templates Over Time" subtitle="Weekly send volume" className="lg:col-span-3">

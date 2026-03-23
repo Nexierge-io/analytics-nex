@@ -22,14 +22,18 @@ export function AutomationsTab() {
   return (
     <div className="space-y-6 animate-fade-in-up">
       <SectionHeader title="Activity" subtitle="Filtered by date range" />
-      <KpiRow className="sm:grid-cols-1 lg:grid-cols-1" style={{ maxWidth: 320 }}>
-        {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-      </KpiRow>
+      <div className="max-w-xs">
+        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
+          {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+        </KpiRow>
+      </div>
 
       <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
-      <KpiRow className="sm:grid-cols-1 lg:grid-cols-1" style={{ maxWidth: 320 }}>
-        {automationsLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-      </KpiRow>
+      <div className="max-w-xs">
+        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
+          {automationsLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+        </KpiRow>
+      </div>
 
       <ChartCard title="Automations Over Time" subtitle="Weekly trigger volume">
         <div className="h-56">

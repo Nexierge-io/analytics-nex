@@ -30,9 +30,11 @@ export function WhatsAppSubTab() {
       </KpiRow>
 
       <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
-      <KpiRow className="sm:grid-cols-1 lg:grid-cols-1" style={{ maxWidth: 320 }}>
-        {whatsappLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-      </KpiRow>
+      <div className="max-w-xs">
+        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
+          {whatsappLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+        </KpiRow>
+      </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard title="Conversations Over Time" subtitle="Daily WhatsApp conversations">
