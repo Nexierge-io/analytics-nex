@@ -38,7 +38,7 @@ function HorizontalBarChart({ data, color }: { data: { name: string; value: numb
 export function ContactsTab() {
   const range = useDateRange();
   const activityKpis = scaleKpis(contactsActivityKpis, range);
-  const creationTrend = generateTimeSeries({ whatsapp: 14, widget: 6, manual: 2, staff: 1.5 }, range);
+  
 
   return (
     <div className="space-y-6 animate-fade-in-up">
