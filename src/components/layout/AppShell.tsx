@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { modules } from "@/lib/config/navigation";
 import { ModuleSwitcher } from "./ModuleSwitcher";
 import { DateRangeSelector, type DateRange } from "./DateRangeSelector";
+import { DateRangeProvider } from "@/lib/DateRangeContext";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -33,7 +34,9 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </header>
       <main className="mx-auto max-w-[1440px] px-6 py-8">
-        {children}
+        <DateRangeProvider value={dateRange}>
+          {children}
+        </DateRangeProvider>
       </main>
     </div>
   );
