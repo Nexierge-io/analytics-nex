@@ -62,18 +62,21 @@ function generateTimeLabels(range: DateRange): string[] {
       return ["6am", "8am", "10am", "12pm", "2pm", "4pm", "6pm", "8pm", "10pm"];
     case "7d":
       return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    case "30d":
+    case "30d": {
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       return Array.from({ length: 30 }, (_, i) => {
         const d = new Date();
         d.setDate(d.getDate() - 29 + i);
-        return `${d.getMonth() + 1}/${d.getDate()}`;
+        return `${monthNames[d.getMonth()]} ${d.getDate()}`;
       });
+    }
     case "3m": {
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
       const weeks: string[] = [];
       for (let i = 11; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i * 7);
-        weeks.push(`${d.getMonth() + 1}/${d.getDate()}`);
+        weeks.push(`${monthNames[d.getMonth()]} ${d.getDate()}`);
       }
       return weeks;
     }
