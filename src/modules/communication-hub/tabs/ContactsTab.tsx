@@ -48,7 +48,7 @@ export function ContactsTab() {
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
-      <ChartCard title="Contact Creation by Source" subtitle="New contacts by origin">
+      <ChartCard title="New Contacts Over Time" subtitle="Contact creation trend">
         <div className="h-56">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={creationTrend}>
@@ -62,14 +62,6 @@ export function ContactsTab() {
               <Area type="monotone" dataKey="staff" stackId="1" stroke="hsl(var(--chart-4))" fill="hsl(var(--chart-4))" fillOpacity={0.15} strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
-        </div>
-        <div className="flex gap-5 mt-2">
-          {["WhatsApp", "Widget", "Manual", "Staff"].map((label, i) => (
-            <div key={label} className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: `hsl(var(--chart-${i + 1}))` }} />
-              {label}
-            </div>
-          ))}
         </div>
       </ChartCard>
 
