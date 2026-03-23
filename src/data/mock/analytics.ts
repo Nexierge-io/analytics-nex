@@ -1,5 +1,4 @@
 // ── Communication Hub Summary ──
-// Activity KPIs (filtered by date range)
 export const summaryActivityKpis = [
   { label: "Conversations", value: "1,284", change: "+12%", trend: "up" as const },
   { label: "Messages", value: "8,471", change: "+8.3%", trend: "up" as const },
@@ -9,7 +8,6 @@ export const summaryActivityKpis = [
   { label: "Widget Conversion %", value: "18.7%", change: "+3.1%", trend: "up" as const },
 ];
 
-// Lifetime KPIs (not filtered)
 export const summaryLifetimeKpis = [
   { label: "Total Contacts", value: "4,218", change: "+163", trend: "up" as const },
   { label: "WhatsApp Verified %", value: "94.2%", change: "+1.8%", trend: "up" as const },
@@ -51,17 +49,12 @@ export const activityByHour = [
   { hour: "18", count: 87 }, { hour: "20", count: 54 }, { hour: "22", count: 28 },
 ];
 
-// ── WhatsApp subtab ──
+// ── WhatsApp subtab (comms only, no contact metrics) ──
 export const whatsappActivityKpis = [
   { label: "Conversations", value: "862", change: "+9%", trend: "up" as const },
   { label: "Messages", value: "5,218", change: "+11%", trend: "up" as const },
   { label: "AI Handled %", value: "74.1%", change: "+3.8%", trend: "up" as const },
   { label: "Handoffs", value: "24", change: "-6", trend: "down" as const },
-  { label: "New Contacts", value: "97", change: "+18%", trend: "up" as const },
-];
-
-export const whatsappLifetimeKpis = [
-  { label: "WhatsApp Verified", value: "812", change: "+42", trend: "up" as const },
 ];
 
 export const whatsappConvoData = [
@@ -83,16 +76,12 @@ export const aiVsHumanPie = [
   { name: "Human Handled", value: 25.9, fill: "hsl(var(--chart-3))" },
 ];
 
-// ── Widget subtab ──
+// ── Widget subtab (comms/funnel only, no contact metrics) ──
 export const widgetActivityKpis = [
   { label: "Sessions", value: "2,847", change: "+16%", trend: "up" as const },
-  { label: "Contacts Created", value: "163", change: "+24", trend: "up" as const },
-  { label: "Conversations Created", value: "422", change: "+18%", trend: "up" as const },
+  { label: "Conversations", value: "422", change: "+18%", trend: "up" as const },
+  { label: "Messages", value: "1,284", change: "+14%", trend: "up" as const },
   { label: "Widget Conversion %", value: "18.7%", change: "+3.1%", trend: "up" as const },
-];
-
-export const widgetLifetimeKpis = [
-  { label: "WA Verified from Widget", value: "348", change: "+28", trend: "up" as const },
 ];
 
 export const widgetSessionsData = [
@@ -102,27 +91,26 @@ export const widgetSessionsData = [
   { date: "Sun", value: 468 },
 ];
 
-export const widgetConversionsData = [
-  { date: "Mon", conversions: 48, sessions: 340 },
-  { date: "Tue", conversions: 62, sessions: 412 },
-  { date: "Wed", conversions: 55, sessions: 388 },
-  { date: "Thu", conversions: 71, sessions: 445 },
-  { date: "Fri", conversions: 78, sessions: 478 },
-  { date: "Sat", conversions: 84, sessions: 510 },
-  { date: "Sun", conversions: 76, sessions: 468 },
+export const widgetConversationsData = [
+  { date: "Mon", value: 52 }, { date: "Tue", value: 64 },
+  { date: "Wed", value: 58 }, { date: "Thu", value: 72 },
+  { date: "Fri", value: 78 }, { date: "Sat", value: 84 },
+  { date: "Sun", value: 76 },
+];
+
+export const widgetConversionTrendData = [
+  { date: "Mon", rate: 15.3 }, { date: "Tue", rate: 15.5 },
+  { date: "Wed", rate: 14.9 }, { date: "Thu", rate: 16.2 },
+  { date: "Fri", rate: 16.3 }, { date: "Sat", rate: 16.5 },
+  { date: "Sun", rate: 16.2 },
 ];
 
 // ── Contacts tab ──
-// Lifetime (not filtered)
+// Database (lifetime)
 export const contactsLifetimeKpis = [
   { label: "Total Contacts", value: "4,218", change: "+163", trend: "up" as const },
   { label: "WhatsApp Verified %", value: "94.2%", change: "+1.8%", trend: "up" as const },
   { label: "Returning Guests", value: "1,847", change: "+12%", trend: "up" as const },
-];
-
-// Activity (filtered)
-export const contactsActivityKpis = [
-  { label: "New Contacts", value: "163", change: "+24%", trend: "up" as const },
 ];
 
 export const contactsByCategory = [
@@ -138,6 +126,26 @@ export const contactsByStage = [
   { name: "Post-stay", value: 1546 },
 ];
 
+// Activity (filtered)
+export const contactsActivityKpis = [
+  { label: "New Contacts", value: "163", change: "+24%", trend: "up" as const },
+  { label: "From WhatsApp", value: "97", change: "+18%", trend: "up" as const },
+  { label: "From Widget", value: "42", change: "+31%", trend: "up" as const },
+  { label: "Manual", value: "14", change: "+2", trend: "up" as const },
+  { label: "By Staff", value: "10", change: "-3", trend: "down" as const },
+];
+
+export const contactCreationTrendData = [
+  { date: "Mon", whatsapp: 12, widget: 5, manual: 2, staff: 1 },
+  { date: "Tue", whatsapp: 15, widget: 7, manual: 2, staff: 2 },
+  { date: "Wed", whatsapp: 14, widget: 6, manual: 3, staff: 1 },
+  { date: "Thu", whatsapp: 13, widget: 8, manual: 1, staff: 2 },
+  { date: "Fri", whatsapp: 16, widget: 6, manual: 2, staff: 1 },
+  { date: "Sat", whatsapp: 15, widget: 5, manual: 2, staff: 2 },
+  { date: "Sun", whatsapp: 12, widget: 5, manual: 2, staff: 1 },
+];
+
+// Origin (lifetime)
 export const contactsByOrigin = [
   { name: "WhatsApp", value: 2108 },
   { name: "Widget", value: 1264 },

@@ -1,8 +1,7 @@
 import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
-import { SectionHeader } from "@/components/analytics/SectionHeader";
-import { widgetActivityKpis, widgetLifetimeKpis, widgetSessionsData, widgetConversionsData } from "@/data/mock/analytics";
+import { widgetActivityKpis, widgetSessionsData, widgetConversationsData, widgetConversionTrendData } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
 import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import {
@@ -21,20 +20,13 @@ export function WidgetSubTab() {
   const range = useDateRange();
   const activityKpis = scaleKpis(widgetActivityKpis, range);
   const sessData = scaleTimeSeries(widgetSessionsData, ["value"], range);
-  const convData = scaleTimeSeries(widgetConversionsData, ["conversions", "sessions"], range);
+  const convoData = scaleTimeSeries(widgetConversationsData, ["value"], range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
       <KpiRow className="lg:grid-cols-4 xl:grid-cols-4">
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
-
-      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
-      <div className="max-w-xs">
-        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
-          {widgetLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-        </KpiRow>
-      </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard title="Sessions Over Time" subtitle="Daily widget sessions">
@@ -51,29 +43,34 @@ export function WidgetSubTab() {
           </div>
         </ChartCard>
 
-        <ChartCard title="Conversions Over Time" subtitle="Sessions vs conversions">
+        <ChartCard title="Conversations Over Time" subtitle="Daily conversations from widget">
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={convData}>
+              <AreaChart data={convoData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                 <Tooltip contentStyle={tooltipStyle} />
-                <Line type="monotone" dataKey="sessions" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={false} />
-                <Line type="monotone" dataKey="conversions" stroke="hsl(var(--chart-1))" strokeWidth={2} dot={false} />
-              </LineChart>
+                <Area type="monotone" dataKey="value" stroke="hsl(var(--chart-2))" fill="hsl(var(--chart-2))" fillOpacity={0.1} strokeWidth={2} />
+              </AreaChart>
             </ResponsiveContainer>
-          </div>
-          <div className="flex gap-6 mt-2">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-chart-2" />Sessions
-            </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-chart-1" />Conversions
-            </div>
           </div>
         </ChartCard>
       </div>
+
+      <ChartCard title="Conversion Rate Trend" subtitle="Widget conversion % over time">
+        <div className="h-56">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={widgetConversionTrendData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+              <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} unit="%" />
+              <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => `${v}%`} />
+              <Line type="monotone" dataKey="rate" stroke="hsl(var(--chart-1))" strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </ChartCard>
     </div>
   );
 }
