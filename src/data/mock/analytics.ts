@@ -76,33 +76,35 @@ export const aiVsHumanPie = [
   { name: "Human Handled", value: 25.9, fill: "hsl(var(--chart-3))" },
 ];
 
-// ── Widget subtab (comms/funnel only, no contact metrics) ──
+// ── Widget subtab (session → gate → identity → WhatsApp funnel) ──
 export const widgetActivityKpis = [
-  { label: "Sessions", value: "2,847", change: "+16%", trend: "up" as const },
-  { label: "Conversations", value: "422", change: "+18%", trend: "up" as const },
-  { label: "Messages", value: "1,284", change: "+14%", trend: "up" as const },
-  { label: "Widget Conversion %", value: "18.7%", change: "+3.1%", trend: "up" as const },
+  { label: "Sessions Started", value: "2,847", change: "+16%", trend: "up" as const },
+  { label: "Conversations", value: "1,422", change: "+12%", trend: "up" as const },
+  { label: "Messages", value: "4,218", change: "+14%", trend: "up" as const },
+  { label: "Gate Reached %", value: "62.4%", change: "+3.1%", trend: "up" as const },
+  { label: "Identity Collected %", value: "38.7%", change: "+2.8%", trend: "up" as const },
+  { label: "WA Message Received %", value: "24.1%", change: "+1.9%", trend: "up" as const },
+  { label: "Widget Conversion %", value: "24.1%", change: "+1.9%", trend: "up" as const },
 ];
 
-export const widgetSessionsData = [
-  { date: "Mon", value: 340 }, { date: "Tue", value: 412 },
-  { date: "Wed", value: 388 }, { date: "Thu", value: 445 },
-  { date: "Fri", value: 478 }, { date: "Sat", value: 510 },
-  { date: "Sun", value: 468 },
+export const widgetFunnelSteps = [
+  { label: "Sessions Started", value: 2847, pct: 100 },
+  { label: "Gate Reached", value: 1777, pct: 62.4 },
+  { label: "Identity Collected", value: 1102, pct: 38.7 },
+  { label: "WA Message Received", value: 686, pct: 24.1 },
 ];
 
-export const widgetConversationsData = [
-  { date: "Mon", value: 52 }, { date: "Tue", value: 64 },
-  { date: "Wed", value: 58 }, { date: "Thu", value: 72 },
-  { date: "Fri", value: 78 }, { date: "Sat", value: 84 },
-  { date: "Sun", value: 76 },
+export const widgetCloseReasons = [
+  { label: "Migrated to WhatsApp", value: 686, pct: 24.1, color: "hsl(var(--chart-1))" },
+  { label: "Dropped Off", value: 2014, pct: 70.7, color: "hsl(var(--chart-3))" },
+  { label: "Spam / Bot", value: 147, pct: 5.2, color: "hsl(var(--chart-4))" },
 ];
 
-export const widgetConversionTrendData = [
-  { date: "Mon", rate: 15.3 }, { date: "Tue", rate: 15.5 },
-  { date: "Wed", rate: 14.9 }, { date: "Thu", rate: 16.2 },
-  { date: "Fri", rate: 16.3 }, { date: "Sat", rate: 16.5 },
-  { date: "Sun", rate: 16.2 },
+export const widgetLifetimeKpis = [
+  { label: "Total Sessions", value: "48,312" },
+  { label: "Total Identities Collected", value: "18,694" },
+  { label: "Total WA Conversions", value: "11,647" },
+  { label: "Total Dropped Off", value: "34,122" },
 ];
 
 // ── Contacts tab ──
