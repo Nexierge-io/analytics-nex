@@ -3,6 +3,8 @@ import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
 import { automationsKpis, automationsByType, automationsOverTime, mostTriggeredAutomation } from "@/data/mock/analytics";
+import { useDateRange } from "@/lib/DateRangeContext";
+import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const tooltipStyle = {
@@ -13,19 +15,22 @@ const tooltipStyle = {
 };
 
 export function AutomationsTab() {
+  const range = useDateRange();
+  const kpis = scaleKpis(automationsKpis, range);
+  const timeData = scaleTimeSeries(automationsOverTime, ["value"], range);
+  const typeData = scaleTimeSeries(automationsByType, ["value"], range);
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       <KpiRow className="lg:grid-cols-4">
-        {automationsKpis.map((kpi) => (
-          <KpiCard key={kpi.label} {...kpi} />
-        ))}
+        {kpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <ChartCard title="Automations Over Time" subtitle="Weekly trigger volume" className="lg:col-span-2">
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={automationsOverTime}>
+              <AreaChart data={timeData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
@@ -50,7 +55,7 @@ export function AutomationsTab() {
       <ChartCard title="By Type" subtitle="Trigger count per automation type">
         <div className="h-52">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={automationsByType}>
+            <BarChart data={typeData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
               <XAxis dataKey="name" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />

@@ -3,6 +3,8 @@ import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
 import { contactsKpis, contactsByCategory, contactsByStage, contactsByOrigin } from "@/data/mock/analytics";
+import { useDateRange } from "@/lib/DateRangeContext";
+import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 const tooltipStyle = {
@@ -28,25 +30,29 @@ function HorizontalBarChart({ data, color }: { data: { name: string; value: numb
 }
 
 export function ContactsTab() {
+  const range = useDateRange();
+  const kpis = scaleKpis(contactsKpis, range);
+  const catData = scaleTimeSeries(contactsByCategory, ["value"], range);
+  const stageData = scaleTimeSeries(contactsByStage, ["value"], range);
+  const originData = scaleTimeSeries(contactsByOrigin, ["value"], range);
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       <KpiRow className="lg:grid-cols-4">
-        {contactsKpis.map((kpi) => (
-          <KpiCard key={kpi.label} {...kpi} />
-        ))}
+        {kpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
       <SectionHeader title="Breakdowns" subtitle="Contact segmentation across dimensions" />
 
       <div className="grid gap-4 lg:grid-cols-3">
         <ChartCard title="By Category" subtitle="Contact classification">
-          <HorizontalBarChart data={contactsByCategory} color="hsl(var(--chart-1))" />
+          <HorizontalBarChart data={catData} color="hsl(var(--chart-1))" />
         </ChartCard>
         <ChartCard title="By Stage" subtitle="Guest journey stage">
-          <HorizontalBarChart data={contactsByStage} color="hsl(var(--chart-2))" />
+          <HorizontalBarChart data={stageData} color="hsl(var(--chart-2))" />
         </ChartCard>
         <ChartCard title="By Origin" subtitle="Contact source">
-          <HorizontalBarChart data={contactsByOrigin} color="hsl(var(--chart-3))" />
+          <HorizontalBarChart data={originData} color="hsl(var(--chart-3))" />
         </ChartCard>
       </div>
     </div>

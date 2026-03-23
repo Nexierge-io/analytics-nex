@@ -2,6 +2,8 @@ import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { templatesKpis, templatesOverTime, mostUsedTemplates } from "@/data/mock/analytics";
+import { useDateRange } from "@/lib/DateRangeContext";
+import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const tooltipStyle = {
@@ -12,19 +14,21 @@ const tooltipStyle = {
 };
 
 export function TemplatesTab() {
+  const range = useDateRange();
+  const kpis = scaleKpis(templatesKpis, range);
+  const timeData = scaleTimeSeries(templatesOverTime, ["value"], range);
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       <KpiRow className="lg:grid-cols-4">
-        {templatesKpis.map((kpi) => (
-          <KpiCard key={kpi.label} {...kpi} />
-        ))}
+        {kpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
       <div className="grid gap-4 lg:grid-cols-5">
         <ChartCard title="Templates Over Time" subtitle="Weekly send volume" className="lg:col-span-3">
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={templatesOverTime}>
+              <AreaChart data={timeData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
