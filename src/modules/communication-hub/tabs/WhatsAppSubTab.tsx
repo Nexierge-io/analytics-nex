@@ -2,9 +2,11 @@ import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { whatsappKpis, whatsappConvoData, whatsappMessagesData, aiVsHumanPie } from "@/data/mock/analytics";
+import { useDateRange } from "@/lib/DateRangeContext";
+import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import {
-  LineChart, Line, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area,
+  PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, LineChart, Line,
 } from "recharts";
 
 const tooltipStyle = {
@@ -15,24 +17,25 @@ const tooltipStyle = {
 };
 
 export function WhatsAppSubTab() {
+  const range = useDateRange();
+  const kpis = scaleKpis(whatsappKpis, range);
+  const convoData = scaleTimeSeries(whatsappConvoData, ["value"], range);
+  const msgData = scaleTimeSeries(whatsappMessagesData, ["value"], range);
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       <KpiRow className="lg:grid-cols-4 xl:grid-cols-4">
-        {whatsappKpis.slice(0, 4).map((kpi) => (
-          <KpiCard key={kpi.label} {...kpi} />
-        ))}
+        {kpis.slice(0, 4).map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
       <KpiRow className="sm:grid-cols-3 lg:grid-cols-3">
-        {whatsappKpis.slice(4).map((kpi) => (
-          <KpiCard key={kpi.label} {...kpi} />
-        ))}
+        {kpis.slice(4).map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard title="Conversations Over Time" subtitle="Daily WhatsApp conversations">
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={whatsappConvoData}>
+              <AreaChart data={convoData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
@@ -46,7 +49,7 @@ export function WhatsAppSubTab() {
         <ChartCard title="Messages Over Time" subtitle="Daily message volume">
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={whatsappMessagesData}>
+              <LineChart data={msgData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
@@ -63,9 +66,7 @@ export function WhatsAppSubTab() {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie data={aiVsHumanPie} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={78} strokeWidth={2} stroke="hsl(var(--card))">
-                {aiVsHumanPie.map((entry, i) => (
-                  <Cell key={i} fill={entry.fill} />
-                ))}
+                {aiVsHumanPie.map((entry, i) => <Cell key={i} fill={entry.fill} />)}
               </Pie>
               <Tooltip contentStyle={tooltipStyle} />
             </PieChart>

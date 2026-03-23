@@ -1,10 +1,9 @@
 import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
-import {
-  communicationKpis, messageVolumeData, channelDistribution,
-  responseTimeData, activityByHour,
-} from "@/data/mock/analytics";
+import { communicationKpis, messageVolumeData, channelDistribution, responseTimeData, activityByHour } from "@/data/mock/analytics";
+import { useDateRange } from "@/lib/DateRangeContext";
+import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -18,25 +17,30 @@ const tooltipStyle = {
 };
 
 export function SummaryTab() {
+  const range = useDateRange();
+  const kpis = scaleKpis(communicationKpis, range);
+  const volumeData = scaleTimeSeries(messageVolumeData, ["whatsapp", "widget"], range);
+  const respData = scaleTimeSeries(responseTimeData, ["avg"], range);
+  const actData = scaleTimeSeries(activityByHour, ["count"], range);
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       <KpiRow className="lg:grid-cols-4 xl:grid-cols-4">
-        {communicationKpis.slice(0, 4).map((kpi) => (
+        {kpis.slice(0, 4).map((kpi) => (
           <KpiCard key={kpi.label} {...kpi} />
         ))}
       </KpiRow>
       <KpiRow className="lg:grid-cols-4 xl:grid-cols-4">
-        {communicationKpis.slice(4).map((kpi) => (
+        {kpis.slice(4).map((kpi) => (
           <KpiCard key={kpi.label} {...kpi} />
         ))}
       </KpiRow>
 
-      {/* Main charts row */}
       <div className="grid gap-4 lg:grid-cols-3">
-        <ChartCard title="Message Volume" subtitle="Last 7 days by channel" className="lg:col-span-2">
+        <ChartCard title="Message Volume" subtitle="By channel" className="lg:col-span-2">
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={messageVolumeData}>
+              <AreaChart data={volumeData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="date" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
@@ -72,12 +76,11 @@ export function SummaryTab() {
         </ChartCard>
       </div>
 
-      {/* Secondary charts row */}
       <div className="grid gap-4 lg:grid-cols-2">
         <ChartCard title="Avg Response Time" subtitle="Seconds by hour of day">
           <div className="h-56">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={responseTimeData}>
+              <BarChart data={respData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="hour" tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
@@ -88,7 +91,7 @@ export function SummaryTab() {
           </div>
         </ChartCard>
 
-        <ChartCard title="AI vs Human Handling" subtitle="Resolution breakdown this week">
+        <ChartCard title="AI vs Human Handling" subtitle="Resolution breakdown">
           <div className="space-y-4 py-4">
             {[
               { label: "AI Fully Resolved", value: 71.3, color: "hsl(var(--chart-1))" },
@@ -109,11 +112,10 @@ export function SummaryTab() {
         </ChartCard>
       </div>
 
-      {/* Activity heatmap row */}
-      <ChartCard title="Activity by Hour" subtitle="Message volume distribution across the day">
+      <ChartCard title="Activity by Hour" subtitle="Message volume across the day">
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={activityByHour}>
+            <BarChart data={actData}>
               <XAxis dataKey="hour" tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }} axisLine={false} tickLine={false} />
               <Tooltip contentStyle={tooltipStyle} />
