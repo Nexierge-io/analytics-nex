@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
 import { modules } from "@/lib/config/navigation";
 import { ModuleSwitcher } from "./ModuleSwitcher";
-import { DateRangeSelector, type DateRange } from "./DateRangeSelector";
+import type { DateRange } from "./DateRangeSelector";
 import { DateRangeProvider } from "@/lib/DateRangeContext";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -31,7 +31,6 @@ export function AppShell({ children }: AppShellProps) {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <DateRangeSelector value={dateRange} onChange={setDateRange} />
             <button
               onClick={toggleTheme}
               className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground active:scale-95"
@@ -44,7 +43,7 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </header>
       <main className="mx-auto max-w-[1440px] px-6 py-8">
-        <DateRangeProvider value={dateRange}>
+        <DateRangeProvider value={{ range: dateRange, setRange: setDateRange }}>
           {children}
         </DateRangeProvider>
       </main>
