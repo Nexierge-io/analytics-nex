@@ -1,7 +1,8 @@
 import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
-import { templatesKpis, templatesOverTime, mostUsedTemplates } from "@/data/mock/analytics";
+import { SectionHeader } from "@/components/analytics/SectionHeader";
+import { templatesActivityKpis, templatesLifetimeKpis, templatesOverTime, mostUsedTemplates } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
 import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -15,13 +16,19 @@ const tooltipStyle = {
 
 export function TemplatesTab() {
   const range = useDateRange();
-  const kpis = scaleKpis(templatesKpis, range);
+  const activityKpis = scaleKpis(templatesActivityKpis, range);
   const timeData = scaleTimeSeries(templatesOverTime, ["value"], range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <KpiRow className="lg:grid-cols-4">
-        {kpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+      <SectionHeader title="Activity" subtitle="Filtered by date range" />
+      <KpiRow className="sm:grid-cols-1 lg:grid-cols-1" style={{ maxWidth: 320 }}>
+        {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+      </KpiRow>
+
+      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
+      <KpiRow className="sm:grid-cols-1 lg:grid-cols-1" style={{ maxWidth: 320 }}>
+        {templatesLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
       <div className="grid gap-4 lg:grid-cols-5">

@@ -1,13 +1,18 @@
 // ── Communication Hub Summary ──
-export const communicationKpis = [
+// Activity KPIs (filtered by date range)
+export const summaryActivityKpis = [
   { label: "Conversations", value: "1,284", change: "+12%", trend: "up" as const },
   { label: "Messages", value: "8,471", change: "+8.3%", trend: "up" as const },
   { label: "New Contacts", value: "163", change: "+24%", trend: "up" as const },
-  { label: "WhatsApp Verified %", value: "94.2%", change: "+1.8%", trend: "up" as const },
   { label: "AI Handled %", value: "71.3%", change: "+5.2%", trend: "up" as const },
-  { label: "Human Handled %", value: "28.7%", change: "-5.2%", trend: "down" as const },
-  { label: "Handoffs Requested", value: "38", change: "-14%", trend: "down" as const },
+  { label: "Handoffs", value: "38", change: "-14%", trend: "down" as const },
   { label: "Widget Conversion %", value: "18.7%", change: "+3.1%", trend: "up" as const },
+];
+
+// Lifetime KPIs (not filtered)
+export const summaryLifetimeKpis = [
+  { label: "Total Contacts", value: "4,218", change: "+163", trend: "up" as const },
+  { label: "WhatsApp Verified %", value: "94.2%", change: "+1.8%", trend: "up" as const },
 ];
 
 export const messageVolumeData = [
@@ -47,13 +52,15 @@ export const activityByHour = [
 ];
 
 // ── WhatsApp subtab ──
-export const whatsappKpis = [
+export const whatsappActivityKpis = [
   { label: "Conversations", value: "862", change: "+9%", trend: "up" as const },
   { label: "Messages", value: "5,218", change: "+11%", trend: "up" as const },
   { label: "AI Handled %", value: "74.1%", change: "+3.8%", trend: "up" as const },
-  { label: "Human Handled %", value: "25.9%", change: "-3.8%", trend: "down" as const },
-  { label: "Handoffs Requested", value: "24", change: "-6", trend: "down" as const },
+  { label: "Handoffs", value: "24", change: "-6", trend: "down" as const },
   { label: "New Contacts", value: "97", change: "+18%", trend: "up" as const },
+];
+
+export const whatsappLifetimeKpis = [
   { label: "WhatsApp Verified", value: "812", change: "+42", trend: "up" as const },
 ];
 
@@ -77,16 +84,15 @@ export const aiVsHumanPie = [
 ];
 
 // ── Widget subtab ──
-export const widgetKpis = [
-  { label: "Sessions Started", value: "2,847", change: "+16%", trend: "up" as const },
-  { label: "Gate Reached %", value: "68.3%", change: "+4.2%", trend: "up" as const },
-  { label: "Identity Collected %", value: "42.1%", change: "+2.8%", trend: "up" as const },
-  { label: "WhatsApp Clicked %", value: "31.4%", change: "+5.1%", trend: "up" as const },
-  { label: "WA Msg Received %", value: "24.8%", change: "+3.2%", trend: "up" as const },
+export const widgetActivityKpis = [
+  { label: "Sessions", value: "2,847", change: "+16%", trend: "up" as const },
   { label: "Contacts Created", value: "163", change: "+24", trend: "up" as const },
   { label: "Conversations Created", value: "422", change: "+18%", trend: "up" as const },
   { label: "Widget Conversion %", value: "18.7%", change: "+3.1%", trend: "up" as const },
-  { label: "Drop-off %", value: "57.9%", change: "-4.2%", trend: "down" as const },
+];
+
+export const widgetLifetimeKpis = [
+  { label: "WA Verified from Widget", value: "348", change: "+28", trend: "up" as const },
 ];
 
 export const widgetSessionsData = [
@@ -94,15 +100,6 @@ export const widgetSessionsData = [
   { date: "Wed", value: 388 }, { date: "Thu", value: 445 },
   { date: "Fri", value: 478 }, { date: "Sat", value: 510 },
   { date: "Sun", value: 468 },
-];
-
-export const widgetFunnelData = [
-  { stage: "Sessions", value: 2847 },
-  { stage: "Gate Reached", value: 1945 },
-  { stage: "Identity Collected", value: 1199 },
-  { stage: "WA Clicked", value: 894 },
-  { stage: "WA Msg Received", value: 706 },
-  { stage: "Contacts Created", value: 163 },
 ];
 
 export const widgetConversionsData = [
@@ -116,11 +113,16 @@ export const widgetConversionsData = [
 ];
 
 // ── Contacts tab ──
-export const contactsKpis = [
+// Lifetime (not filtered)
+export const contactsLifetimeKpis = [
   { label: "Total Contacts", value: "4,218", change: "+163", trend: "up" as const },
-  { label: "New Contacts", value: "163", change: "+24%", trend: "up" as const },
   { label: "WhatsApp Verified %", value: "94.2%", change: "+1.8%", trend: "up" as const },
   { label: "Returning Guests", value: "1,847", change: "+12%", trend: "up" as const },
+];
+
+// Activity (filtered)
+export const contactsActivityKpis = [
+  { label: "New Contacts", value: "163", change: "+24%", trend: "up" as const },
 ];
 
 export const contactsByCategory = [
@@ -144,11 +146,12 @@ export const contactsByOrigin = [
 ];
 
 // ── Templates tab ──
-export const templatesKpis = [
+export const templatesActivityKpis = [
   { label: "Templates Sent", value: "3,847", change: "+14%", trend: "up" as const },
-  { label: "Templates Today", value: "142", change: "+8%", trend: "up" as const },
-  { label: "Templates This Week", value: "847", change: "+11%", trend: "up" as const },
-  { label: "Templates This Month", value: "3,847", change: "+14%", trend: "up" as const },
+];
+
+export const templatesLifetimeKpis = [
+  { label: "Templates Total", value: "24", change: "+2", trend: "up" as const },
 ];
 
 export const templatesOverTime = [
@@ -165,31 +168,18 @@ export const mostUsedTemplates = [
 ];
 
 // ── Automations tab ──
-export const automationsKpis = [
+export const automationsActivityKpis = [
   { label: "Automations Triggered", value: "2,164", change: "+22%", trend: "up" as const },
-  { label: "Automations Today", value: "87", change: "+12%", trend: "up" as const },
-  { label: "Automations This Week", value: "542", change: "+18%", trend: "up" as const },
-  { label: "Automations This Month", value: "2,164", change: "+22%", trend: "up" as const },
 ];
 
-export const automationsByType = [
-  { name: "Welcome Flow", value: 684 },
-  { name: "Pre-arrival", value: 542 },
-  { name: "In-stay Check", value: 412 },
-  { name: "Post-stay Follow-up", value: 326 },
-  { name: "Re-engagement", value: 200 },
+export const automationsLifetimeKpis = [
+  { label: "Most Used", value: "Welcome Flow", change: "684 triggers", trend: "up" as const },
 ];
 
 export const automationsOverTime = [
   { date: "Week 1", value: 480 }, { date: "Week 2", value: 512 },
   { date: "Week 3", value: 564 }, { date: "Week 4", value: 608 },
 ];
-
-export const mostTriggeredAutomation = {
-  name: "Welcome Flow",
-  count: 684,
-  pct: 31.6,
-};
 
 // ── Other module KPIs ──
 export const mainDashboardKpis = [

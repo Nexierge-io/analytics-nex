@@ -1,7 +1,8 @@
 import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
-import { whatsappKpis, whatsappConvoData, whatsappMessagesData, aiVsHumanPie } from "@/data/mock/analytics";
+import { SectionHeader } from "@/components/analytics/SectionHeader";
+import { whatsappActivityKpis, whatsappLifetimeKpis, whatsappConvoData, whatsappMessagesData, aiVsHumanPie } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
 import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
 import {
@@ -18,17 +19,19 @@ const tooltipStyle = {
 
 export function WhatsAppSubTab() {
   const range = useDateRange();
-  const kpis = scaleKpis(whatsappKpis, range);
+  const activityKpis = scaleKpis(whatsappActivityKpis, range);
   const convoData = scaleTimeSeries(whatsappConvoData, ["value"], range);
   const msgData = scaleTimeSeries(whatsappMessagesData, ["value"], range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <KpiRow className="lg:grid-cols-4 xl:grid-cols-4">
-        {kpis.slice(0, 4).map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+      <KpiRow className="lg:grid-cols-5 xl:grid-cols-5">
+        {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
-      <KpiRow className="sm:grid-cols-3 lg:grid-cols-3">
-        {kpis.slice(4).map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+
+      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
+      <KpiRow className="sm:grid-cols-1 lg:grid-cols-1" style={{ maxWidth: 320 }}>
+        {whatsappLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
       <div className="grid gap-4 lg:grid-cols-2">
