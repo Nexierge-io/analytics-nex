@@ -1,7 +1,8 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { modules } from "@/lib/config/navigation";
 import { ModuleSwitcher } from "./ModuleSwitcher";
-import { Calendar } from "lucide-react";
+import { DateRangeSelector, type DateRange } from "./DateRangeSelector";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ interface AppShellProps {
 export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
   const currentModule = modules.find((m) => m.path === location.pathname) ?? modules[0];
+  const [dateRange, setDateRange] = useState<DateRange>("7d");
 
   return (
     <div className="min-h-screen bg-background">
@@ -25,10 +27,7 @@ export function AppShell({ children }: AppShellProps) {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 rounded-lg border bg-card px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground">
-              <Calendar className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">Last 7 days</span>
-            </button>
+            <DateRangeSelector value={dateRange} onChange={setDateRange} />
             <ModuleSwitcher current={currentModule} />
           </div>
         </div>
