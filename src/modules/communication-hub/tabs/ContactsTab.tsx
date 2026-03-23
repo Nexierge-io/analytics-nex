@@ -7,10 +7,10 @@ import {
   contactsByCategory, contactsByStage, contactsByOrigin,
 } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
-import { scaleKpis, generateTimeSeries } from "@/lib/scaleData";
+import { scaleKpis } from "@/lib/scaleData";
 import {
-  BarChart, Bar, AreaChart, Area,
-  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  BarChart, Bar,
+  XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from "recharts";
 
 const tooltipStyle = {
