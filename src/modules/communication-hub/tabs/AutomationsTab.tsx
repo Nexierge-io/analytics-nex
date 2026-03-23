@@ -2,9 +2,9 @@ import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
-import { automationsActivityKpis, automationsLifetimeKpis, automationsOverTime } from "@/data/mock/analytics";
+import { automationsActivityKpis, automationsLifetimeKpis } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
-import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
+import { scaleKpis, generateTimeSeries } from "@/lib/scaleData";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 
 const tooltipStyle = {
@@ -17,7 +17,7 @@ const tooltipStyle = {
 export function AutomationsTab() {
   const range = useDateRange();
   const activityKpis = scaleKpis(automationsActivityKpis, range);
-  const timeData = scaleTimeSeries(automationsOverTime, ["value"], range);
+  const timeData = generateTimeSeries({ value: 78 }, range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -28,14 +28,7 @@ export function AutomationsTab() {
         </KpiRow>
       </div>
 
-      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
-      <div className="max-w-xs">
-        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
-          {automationsLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-        </KpiRow>
-      </div>
-
-      <ChartCard title="Automations Over Time" subtitle="Weekly trigger volume">
+      <ChartCard title="Automations Over Time" subtitle="Trigger volume">
         <div className="h-56">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={timeData}>
@@ -48,6 +41,13 @@ export function AutomationsTab() {
           </ResponsiveContainer>
         </div>
       </ChartCard>
+
+      <SectionHeader title="Lifetime" subtitle="Not affected by date filter" />
+      <div className="max-w-xs">
+        <KpiRow className="sm:grid-cols-1 lg:grid-cols-1">
+          {automationsLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+        </KpiRow>
+      </div>
     </div>
   );
 }

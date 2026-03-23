@@ -5,10 +5,9 @@ import { SectionHeader } from "@/components/analytics/SectionHeader";
 import {
   contactsLifetimeKpis, contactsActivityKpis,
   contactsByCategory, contactsByStage, contactsByOrigin,
-  contactCreationTrendData,
 } from "@/data/mock/analytics";
 import { useDateRange } from "@/lib/DateRangeContext";
-import { scaleKpis, scaleTimeSeries } from "@/lib/scaleData";
+import { scaleKpis, generateTimeSeries } from "@/lib/scaleData";
 import {
   BarChart, Bar, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -39,32 +38,17 @@ function HorizontalBarChart({ data, color }: { data: { name: string; value: numb
 export function ContactsTab() {
   const range = useDateRange();
   const activityKpis = scaleKpis(contactsActivityKpis, range);
-  const creationTrend = scaleTimeSeries(contactCreationTrendData, ["whatsapp", "widget", "manual", "staff"], range);
+  const creationTrend = generateTimeSeries({ whatsapp: 14, widget: 6, manual: 2, staff: 1.5 }, range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      {/* ── Database (Lifetime) ── */}
-      <SectionHeader title="Database" subtitle="Cumulative contact state — not affected by date filter" />
-      <KpiRow className="lg:grid-cols-3">
-        {contactsLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
-      </KpiRow>
-
-      <div className="grid gap-4 lg:grid-cols-2">
-        <ChartCard title="By Category" subtitle="Contact classification">
-          <HorizontalBarChart data={contactsByCategory} color="hsl(var(--chart-1))" />
-        </ChartCard>
-        <ChartCard title="By Stage" subtitle="Guest journey stage">
-          <HorizontalBarChart data={contactsByStage} color="hsl(var(--chart-2))" />
-        </ChartCard>
-      </div>
-
       {/* ── Activity (Filtered) ── */}
-      <SectionHeader title="Activity" subtitle="Contact creation during selected period" />
+      <SectionHeader title="Activity" subtitle="Filtered by date range" />
       <KpiRow className="lg:grid-cols-5">
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>
 
-      <ChartCard title="Contact Creation by Source" subtitle="Daily new contacts by origin">
+      <ChartCard title="Contact Creation by Source" subtitle="New contacts by origin">
         <div className="h-56">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={creationTrend}>
@@ -89,11 +73,23 @@ export function ContactsTab() {
         </div>
       </ChartCard>
 
-      {/* ── Origin (Lifetime) ── */}
-      <SectionHeader title="Origin" subtitle="Cumulative contact source distribution" />
-      <ChartCard title="Contact Source Distribution" subtitle="Total contacts by origin">
-        <HorizontalBarChart data={contactsByOrigin} color="hsl(var(--chart-3))" />
-      </ChartCard>
+      {/* ── Database (Lifetime) ── */}
+      <SectionHeader title="Database" subtitle="Not affected by date filter" />
+      <KpiRow className="lg:grid-cols-3">
+        {contactsLifetimeKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
+      </KpiRow>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <ChartCard title="By Category" subtitle="Contact classification">
+          <HorizontalBarChart data={contactsByCategory} color="hsl(var(--chart-1))" />
+        </ChartCard>
+        <ChartCard title="By Stage" subtitle="Guest journey stage">
+          <HorizontalBarChart data={contactsByStage} color="hsl(var(--chart-2))" />
+        </ChartCard>
+        <ChartCard title="By Origin" subtitle="Contact source distribution">
+          <HorizontalBarChart data={contactsByOrigin} color="hsl(var(--chart-3))" />
+        </ChartCard>
+      </div>
     </div>
   );
 }

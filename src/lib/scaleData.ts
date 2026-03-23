@@ -45,26 +45,6 @@ export function scaleValue(raw: string, range: DateRange, seed = 0): string {
   return result.toFixed(1);
 }
 
-export function scaleTimeSeries<T extends Record<string, unknown>>(
-  data: T[],
-  keys: string[],
-  range: DateRange,
-): T[] {
-  const m = multipliers[range];
-  return data.map((d, i) =>
-    keys.reduce(
-      (acc, k) => {
-        const v = d[k];
-        if (typeof v === "number") {
-          (acc as Record<string, unknown>)[k] = Math.round(v * m * jitter(i + k.length));
-        }
-        return acc;
-      },
-      { ...d },
-    ),
-  );
-}
-
 export function scaleKpis(
   kpis: { label: string; value: string; change: string; trend: "up" | "down" | "neutral" }[],
   range: DateRange,
@@ -73,4 +53,60 @@ export function scaleKpis(
     ...kpi,
     value: scaleValue(kpi.value, range, i * 7),
   }));
+}
+
+/** Generate time-series labels appropriate for the selected date range */
+function generateTimeLabels(range: DateRange): string[] {
+  switch (range) {
+    case "today":
+      return ["6am", "8am", "10am", "12pm", "2pm", "4pm", "6pm", "8pm", "10pm"];
+    case "7d":
+      return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    case "30d":
+      return Array.from({ length: 30 }, (_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - 29 + i);
+        return `${d.getMonth() + 1}/${d.getDate()}`;
+      });
+    case "3m": {
+      const weeks: string[] = [];
+      for (let i = 11; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i * 7);
+        weeks.push(`${d.getMonth() + 1}/${d.getDate()}`);
+      }
+      return weeks;
+    }
+  }
+}
+
+/**
+ * Generate a time-series dataset with proper labels for the date range.
+ * `baseValues` maps each data key to a base value (the 7d daily average).
+ * Values are scaled by the range and given deterministic jitter.
+ */
+export function generateTimeSeries(
+  keys: Record<string, number>,
+  range: DateRange,
+): Record<string, string | number>[] {
+  const labels = generateTimeLabels(range);
+  const pointCount = labels.length;
+
+  // Scale factor per point relative to 7d daily
+  const perPointScale: Record<DateRange, number> = {
+    today: 0.6,   // hourly slots → lower per-slot
+    "7d": 1,
+    "30d": 1.05,  // daily over 30d → similar per-day
+    "3m": 7.2,    // weekly buckets → ~7x daily
+  };
+
+  const scale = perPointScale[range];
+
+  return labels.map((label, i) => {
+    const row: Record<string, string | number> = { date: label };
+    Object.entries(keys).forEach(([key, base]) => {
+      row[key] = Math.round(base * scale * jitter(i * 13 + key.length * 7));
+    });
+    return row;
+  });
 }
