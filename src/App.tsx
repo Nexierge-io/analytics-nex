@@ -17,7 +17,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter basename="/analytics-nex">
         <AppShell>
           <Routes>
             <Route path="/" element={<MainDashboardPage />} />

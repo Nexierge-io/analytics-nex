@@ -253,9 +253,9 @@ function useLiveConversations() {
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
-function KpiStrip({ accentClass, children }: { accentClass?: string; children: React.ReactNode }) {
+function KpiStrip({ accentClass, onClick, children }: { accentClass?: string; onClick?: () => void; children: React.ReactNode }) {
   return (
-    <div className={`glass-card relative overflow-hidden flex flex-col justify-between p-5 ${accentClass || ""}`}>
+    <div className={`glass-card relative overflow-hidden flex flex-col justify-between p-5 ${accentClass || ""}`} onClick={onClick}>
       <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/5" />
       {children}
     </div>
@@ -534,7 +534,7 @@ export default function MainDashboardPage() {
       {/* KPI Strip */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
 
-        <KpiStrip accentClass="border-l-4 border-emerald-500 stagger-1 animate-fade-in-up">
+        <KpiStrip accentClass="border-l-4 border-emerald-500 stagger-1 animate-fade-in-up cursor-pointer hover:ring-1 hover:ring-accent/30 transition-shadow" onClick={() => navigate("/tickets-requests")}>
           <div>
             <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Today's Revenue</p>
             <h2 className="font-urbanist text-4xl font-black text-foreground tabular-nums">$2,840</h2>
@@ -547,7 +547,7 @@ export default function MainDashboardPage() {
           </div>
         </KpiStrip>
 
-        <KpiStrip accentClass="stagger-2 animate-fade-in-up">
+        <KpiStrip accentClass="stagger-2 animate-fade-in-up cursor-pointer hover:ring-1 hover:ring-accent/30 transition-shadow" onClick={() => navigate("/rooms-guests")}>
           <div>
             <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Today's Occupancy</p>
             <h2 className="font-urbanist text-4xl font-black text-foreground">78%</h2>
@@ -560,7 +560,7 @@ export default function MainDashboardPage() {
           </div>
         </KpiStrip>
 
-        <KpiStrip accentClass="border-l-4 border-amber-400 stagger-3 animate-fade-in-up">
+        <KpiStrip accentClass="border-l-4 border-amber-400 stagger-3 animate-fade-in-up cursor-pointer hover:ring-1 hover:ring-accent/30 transition-shadow" onClick={() => navigate("/tickets-requests")}>
           <div className="flex items-start justify-between">
             <div>
               <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Active Now</p>
@@ -570,16 +570,13 @@ export default function MainDashboardPage() {
             <PulseDot color="amber" />
           </div>
           <div className="mt-2 flex flex-wrap gap-1.5">
-            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-400">
-              {newCount} NEW
-            </span>
             <span className="rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-400">
               {inProgressCount} IN PROGRESS
             </span>
           </div>
         </KpiStrip>
 
-        <KpiStrip accentClass="stagger-4 animate-fade-in-up">
+        <KpiStrip accentClass="stagger-4 animate-fade-in-up cursor-pointer hover:ring-1 hover:ring-accent/30 transition-shadow" onClick={() => navigate("/rooms-guests")}>
           <div>
             <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Today's Movement</p>
             <div className="space-y-1.5">
@@ -606,7 +603,7 @@ export default function MainDashboardPage() {
           </div>
         </KpiStrip>
 
-        <KpiStrip accentClass="border-l-4 border-blue-500 stagger-5 animate-fade-in-up">
+        <KpiStrip accentClass="border-l-4 border-blue-500 stagger-5 animate-fade-in-up cursor-pointer hover:ring-1 hover:ring-accent/30 transition-shadow" onClick={() => navigate("/communication-hub")}>
           <div className="flex items-start justify-between">
             <div>
               <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Live Conversations</p>
@@ -708,10 +705,9 @@ export default function MainDashboardPage() {
                 </span>
                 <button
                   onClick={() => navigate("/tickets-requests")}
-                  className="flex items-center gap-1 rounded-lg bg-accent px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-white transition-all hover:bg-accent/90 active:scale-95"
+                  className="flex items-center gap-1 rounded-lg bg-secondary border border-border px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-foreground transition-all hover:bg-secondary/80 active:scale-95"
                 >
-                  <span className="material-symbols-outlined text-[13px]">add</span>
-                  New Ticket
+                  View all →
                 </button>
               </div>
             </div>
