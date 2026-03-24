@@ -2,7 +2,8 @@ import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
-import { useDateRange } from "@/lib/DateRangeContext";
+import { useDateRangeContext } from "@/lib/DateRangeContext";
+import { InlineDateFilter } from "@/components/layout/DateRangeSelector";
 import { scaleKpis } from "@/lib/scaleData";
 import { cn } from "@/lib/utils";
 import {
@@ -103,7 +104,7 @@ function RankedList({ items }: { items: { name: string; count: number; extra: st
 }
 
 export default function TicketsTab() {
-  const range = useDateRange();
+  const { range, setRange } = useDateRangeContext();
   const bySource = scaleKpis(ticketsBySourceKpis, range);
   const performance = scaleKpis(ticketPerformanceKpis, range);
 
@@ -111,7 +112,7 @@ export default function TicketsTab() {
     <div className="space-y-10 animate-fade-in-up">
       {/* ── Activity ── */}
       <section className="space-y-4">
-        <SectionHeader title="Activity" subtitle="Affected by selected date range" />
+        <SectionHeader title="Activity" action={<InlineDateFilter value={range} onChange={setRange} />} />
       </section>
 
       {/* Volume by Source */}

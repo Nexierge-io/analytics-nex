@@ -132,4 +132,45 @@
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+
+  /* Staggered animation delays */
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.10s; }
+  .stagger-3 { animation-delay: 0.15s; }
+  .stagger-4 { animation-delay: 0.20s; }
+  .stagger-5 { animation-delay: 0.25s; }
+  .stagger-6 { animation-delay: 0.30s; }
+  .stagger-7 { animation-delay: 0.35s; }
+  .stagger-8 { animation-delay: 0.40s; }
+
+  /* Bar fill origin */
+  .bar-origin { transform-origin: left center; }
+
+  /* Glass card */
+  .glass-card {
+    background: hsl(var(--card));
+    border-radius: calc(var(--radius) + 8px);
+    box-shadow: 0 1px 3px 0 hsl(0 0% 0% / 0.04), 0 4px 16px -4px hsl(0 0% 0% / 0.06);
+    border: 1px solid hsl(var(--border) / 0.6);
+  }
+
+  /* Urbanist font */
+  .font-urbanist { font-family: 'Urbanist', sans-serif; }
+
+  /* Material icon helper */
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
 }

@@ -3,7 +3,8 @@ import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
 import { summaryActivityKpis, summaryLifetimeKpis } from "@/data/mock/analytics";
-import { useDateRange } from "@/lib/DateRangeContext";
+import { useDateRangeContext } from "@/lib/DateRangeContext";
+import { InlineDateFilter } from "@/components/layout/DateRangeSelector";
 import { scaleKpis, generateTimeSeries } from "@/lib/scaleData";
 import {
   AreaChart, Area,
@@ -18,13 +19,13 @@ const tooltipStyle = {
 };
 
 export function SummaryTab() {
-  const range = useDateRange();
+  const { range, setRange } = useDateRangeContext();
   const activityKpis = scaleKpis(summaryActivityKpis, range);
   const convoData = generateTimeSeries({ value: 485 }, range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
-      <SectionHeader title="Activity" subtitle="Filtered by date range" />
+      <SectionHeader title="Activity" action={<InlineDateFilter value={range} onChange={setRange} />} />
       <KpiRow className="lg:grid-cols-3 xl:grid-cols-3">
         {activityKpis.slice(0, 3).map((kpi) => (
           <KpiCard key={kpi.label} {...kpi} />

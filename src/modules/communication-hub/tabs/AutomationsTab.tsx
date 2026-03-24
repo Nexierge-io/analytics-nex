@@ -2,7 +2,8 @@ import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
-import { useDateRange } from "@/lib/DateRangeContext";
+import { useDateRangeContext } from "@/lib/DateRangeContext";
+import { InlineDateFilter } from "@/components/layout/DateRangeSelector";
 import { scaleKpis } from "@/lib/scaleData";
 
 // ── Mock data (activity) ──
@@ -30,14 +31,14 @@ const automationsLifetimeKpis = [
 ];
 
 export function AutomationsTab() {
-  const range = useDateRange();
+  const { range, setRange } = useDateRangeContext();
   const activityKpis = scaleKpis(automationsActivityKpis, range);
   const maxTriggers = automationRanking[0].triggers;
 
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* ── Activity ── */}
-      <SectionHeader title="Activity" subtitle="Filtered by date range" />
+      <SectionHeader title="Activity" action={<InlineDateFilter value={range} onChange={setRange} />} />
       <KpiRow className="lg:grid-cols-2">
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>

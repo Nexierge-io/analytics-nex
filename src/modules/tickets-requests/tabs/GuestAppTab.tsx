@@ -2,52 +2,14 @@ import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { ChartCard } from "@/components/analytics/ChartCard";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
-import { useDateRange } from "@/lib/DateRangeContext";
+import { useDateRangeContext } from "@/lib/DateRangeContext";
+import { InlineDateFilter } from "@/components/layout/DateRangeSelector";
 import { scaleKpis } from "@/lib/scaleData";
 import {
-  guestAppSessionKpis, guestAppSessionSourceData,
+  guestAppSessionKpis,
   guestAppPaidFunnel, guestAppPaidKpis, guestAppTopOrderedItems,
   guestAppURKpis, guestAppTopRequestedItems, guestAppLifetimeKpis,
 } from "@/data/mock/tickets";
-
-/* ── Donut ── */
-function SessionSourceDonut({ data }: { data: { name: string; value: number; color: string }[] }) {
-  const total = data.reduce((s, d) => s + d.value, 0);
-  let cumulative = 0;
-  return (
-    <div className="flex items-center gap-6">
-      <div className="relative h-28 w-28 shrink-0">
-        <svg viewBox="0 0 36 36" className="h-full w-full -rotate-90">
-          {data.map((d) => {
-            const pct = (d.value / total) * 100;
-            const offset = cumulative;
-            cumulative += pct;
-            return (
-              <circle key={d.name} cx="18" cy="18" r="15.9155" fill="none"
-                stroke={d.color} strokeWidth="3.2"
-                strokeDasharray={`${pct} ${100 - pct}`}
-                strokeDashoffset={`${-offset}`} strokeLinecap="round" />
-            );
-          })}
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-lg font-semibold text-foreground">{total.toLocaleString()}</span>
-          <span className="text-[10px] text-muted-foreground">sessions</span>
-        </div>
-      </div>
-      <div className="space-y-2">
-        {data.map((d) => (
-          <div key={d.name} className="flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: d.color }} />
-            <span className="text-xs text-muted-foreground">{d.name}</span>
-            <span className="text-xs font-semibold tabular-nums text-foreground">{d.value.toLocaleString()}</span>
-            <span className="text-[10px] text-muted-foreground">({((d.value / total) * 100).toFixed(1)}%)</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /* ── Simple funnel ── */
 function Funnel({ steps }: { steps: { step: string; value: number }[] }) {
@@ -103,7 +65,7 @@ function RankedList({ items, barColor }: { items: { name: string; count: number;
 }
 
 export default function GuestAppTab() {
-  const range = useDateRange();
+  const { range, setRange } = useDateRangeContext();
   const sessions = scaleKpis(guestAppSessionKpis, range);
   const paid = scaleKpis(guestAppPaidKpis, range);
   const ur = scaleKpis(guestAppURKpis, range);
@@ -112,7 +74,7 @@ export default function GuestAppTab() {
     <div className="space-y-10 animate-fade-in-up">
       {/* ── Activity ── */}
       <section className="space-y-4">
-        <SectionHeader title="Activity" subtitle="Affected by selected date range" />
+        <SectionHeader title="Activity" action={<InlineDateFilter value={range} onChange={setRange} />} />
       </section>
 
       {/* Access */}
@@ -123,9 +85,7 @@ export default function GuestAppTab() {
             <KpiCard key={kpi.label} {...kpi} />
           ))}
         </KpiRow>
-        <ChartCard title="Session Source" subtitle="WhatsApp link vs QR / room login">
-          <SessionSourceDonut data={guestAppSessionSourceData} />
-        </ChartCard>
+
       </section>
 
       {/* Two columns: Paid vs Universal */}

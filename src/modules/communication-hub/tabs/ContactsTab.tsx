@@ -6,7 +6,8 @@ import {
   contactsLifetimeKpis, contactsActivityKpis,
   contactsByCategory, contactsByStage, contactsByOrigin,
 } from "@/data/mock/analytics";
-import { useDateRange } from "@/lib/DateRangeContext";
+import { useDateRangeContext } from "@/lib/DateRangeContext";
+import { InlineDateFilter } from "@/components/layout/DateRangeSelector";
 import { scaleKpis } from "@/lib/scaleData";
 
 /** Compact segmented bar — no recharts needed */
@@ -33,13 +34,13 @@ function SegmentedBar({ data, color }: { data: { name: string; value: number }[]
 }
 
 export function ContactsTab() {
-  const range = useDateRange();
+  const { range, setRange } = useDateRangeContext();
   const activityKpis = scaleKpis(contactsActivityKpis, range);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* ── Activity ── */}
-      <SectionHeader title="Activity" subtitle="Filtered by date range" />
+      <SectionHeader title="Activity" action={<InlineDateFilter value={range} onChange={setRange} />} />
       <KpiRow className="lg:grid-cols-5">
         {activityKpis.map((kpi) => <KpiCard key={kpi.label} {...kpi} />)}
       </KpiRow>

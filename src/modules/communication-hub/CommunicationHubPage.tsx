@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TabBar } from "@/components/analytics/TabBar";
-import { DateRangeSelector } from "@/components/layout/DateRangeSelector";
-import { useDateRangeContext } from "@/lib/DateRangeContext";
 import { SummaryTab } from "./tabs/SummaryTab";
 import { InboxesTab } from "./tabs/InboxesTab";
 import { ContactsTab } from "./tabs/ContactsTab";
@@ -19,7 +17,6 @@ const tabs = [
 
 export default function CommunicationHubPage() {
   const [activeTab, setActiveTab] = useState("summary");
-  const { range, setRange } = useDateRangeContext();
 
   return (
     <>
@@ -27,9 +24,8 @@ export default function CommunicationHubPage() {
         title="Communication Hub"
         subtitle="Centralized communication analytics across all guest channels"
       />
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8">
         <TabBar tabs={tabs} active={activeTab} onTabChange={setActiveTab} />
-        <DateRangeSelector value={range} onChange={setRange} />
       </div>
 
       {activeTab === "summary" && <SummaryTab />}

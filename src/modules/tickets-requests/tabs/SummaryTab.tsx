@@ -3,7 +3,8 @@ import { TrendingUp, TrendingDown } from "lucide-react";
 import { KpiCard } from "@/components/analytics/KpiCard";
 import { KpiRow } from "@/components/analytics/KpiRow";
 import { SectionHeader } from "@/components/analytics/SectionHeader";
-import { useDateRange } from "@/lib/DateRangeContext";
+import { useDateRangeContext } from "@/lib/DateRangeContext";
+import { InlineDateFilter } from "@/components/layout/DateRangeSelector";
 import { scaleKpis, scaleValue } from "@/lib/scaleData";
 import {
   summaryRevenueHero,
@@ -19,14 +20,30 @@ const liveStatuses = [
   { label: "ON HOLD", emoji: "🟠", base: 5 },
 ];
 
+// Department breakdown — base counts sum to 39 (= 8+12+14+5)
+// urgency: "new" = has NEW tickets (yellow), "hold" = has ON_HOLD (orange), "active" = all accepted/in-progress (blue)
+const liveDepts = [
+  { name: "Room Service", base: 14, urgency: "active" as const },
+  { name: "Housekeeping", base: 12, urgency: "active" as const },
+  { name: "Front Desk",   base: 8,  urgency: "new"    as const },
+  { name: "Sales",        base: 5,  urgency: "hold"   as const },
+];
+
 function useLiveTickets() {
   const [values, setValues] = useState(liveStatuses.map((s) => s.base));
+  const [deptValues, setDeptValues] = useState(liveDepts.map((d) => d.base));
 
   useEffect(() => {
     const id = setInterval(() => {
       setValues((prev) =>
-        prev.map((v, i) => {
-          const delta = Math.floor(Math.random() * 3) - 1; // -1, 0, or +1
+        prev.map((v) => {
+          const delta = Math.floor(Math.random() * 3) - 1;
+          return Math.max(0, v + delta);
+        })
+      );
+      setDeptValues((prev) =>
+        prev.map((v) => {
+          const delta = Math.floor(Math.random() * 3) - 1;
           return Math.max(0, v + delta);
         })
       );
@@ -34,11 +51,18 @@ function useLiveTickets() {
     return () => clearInterval(id);
   }, []);
 
-  return values;
+  return { values, deptValues };
 }
 
+const urgencyDot: Record<"new" | "hold" | "active", string> = {
+  new:    "bg-yellow-400",
+  hold:   "bg-orange-400",
+  active: "bg-blue-400",
+};
+
 function LiveSystemStatus() {
-  const values = useLiveTickets();
+  const { values, deptValues } = useLiveTickets();
+  const maxDept = Math.max(...deptValues, 1);
 
   return (
     <section className="space-y-3">
@@ -78,14 +102,42 @@ function LiveSystemStatus() {
         ))}
       </div>
 
+      {/* By Department — Live */}
+      <div className="rounded-2xl border border-accent/10 bg-card px-5 py-4">
+        <p className="mb-3 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+          By Department — Live
+        </p>
+        <div className="space-y-2.5">
+          {liveDepts.map((dept, i) => (
+            <div key={dept.name} className="flex items-center gap-3">
+              {/* Dot */}
+              <span className={`h-2 w-2 shrink-0 rounded-full ${urgencyDot[dept.urgency]}`} />
+              {/* Name */}
+              <span className="w-28 shrink-0 text-[12px] text-muted-foreground">{dept.name}</span>
+              {/* Bar */}
+              <div className="flex-1 rounded-full bg-accent/10 h-1.5 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all duration-700 ${urgencyDot[dept.urgency]}`}
+                  style={{ width: `${Math.round((deptValues[i] / maxDept) * 100)}%` }}
+                />
+              </div>
+              {/* Count */}
+              <span className="w-5 shrink-0 text-right text-[12px] font-semibold tabular-nums text-foreground">
+                {deptValues[i]}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Divider */}
-      <div className="border-b border-border/60 pt-4" />
+      <div className="border-b border-border/60 pt-2" />
     </section>
   );
 }
 
 export default function SummaryTab() {
-  const range = useDateRange();
+  const { range, setRange } = useDateRangeContext();
   const activity = scaleKpis(summaryActivityKpis, range);
   const periodRevenue = scaleValue(summaryRevenueHero.periodRevenue, range, 99);
 
@@ -96,7 +148,7 @@ export default function SummaryTab() {
 
       {/* ── Activity ── */}
       <section className="space-y-4">
-        <SectionHeader title="Activity" subtitle="Affected by selected date range" />
+        <SectionHeader title="Activity" action={<InlineDateFilter value={range} onChange={setRange} />} />
 
         {/* Revenue Hero */}
         <div className="rounded-2xl border border-kpi-positive/20 bg-card p-6 shadow-[0_0_24px_-6px_hsl(var(--kpi-positive)/0.12)]">
